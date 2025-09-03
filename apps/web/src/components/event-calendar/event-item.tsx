@@ -9,13 +9,9 @@ import {
   getBorderRadiusClasses,
   getEventColorClasses,
   type CalendarEvent,
-} from "@/components/event-calendar/event-calendar"
+} from "@/components/event-calendar"
 import { cn } from "@/lib/utils"
 
-// Using date-fns format with custom formatting:
-// 'h' - hours (1-12)
-// 'a' - am/pm
-// ':mm' - minutes with leading zero (only if the token 'mm' is present)
 const formatTimeWithOptionalMinutes = (date: Date) => {
   return format(date, getMinutes(date) === 0 ? "ha" : "h:mma").toLowerCase()
 }

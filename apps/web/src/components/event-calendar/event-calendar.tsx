@@ -35,7 +35,7 @@ import {
   MonthView,
   WeekCellsHeight,
   WeekView,
-} from "@/components/event-calendar/event-calendar"
+} from "@/components/event-calendar"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -412,4 +412,4 @@ export function EventCalendar({
   )
 }
 
-export { CalendarEvent }
+export type { CalendarEvent }

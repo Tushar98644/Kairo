@@ -21,7 +21,7 @@ import {
   useCurrentTimeIndicator,
   WeekCellsHeight,
   type CalendarEvent,
-} from "@/components/event-calendar/event-calendar"
+} from "@/components/event-calendar"
 import {
   EndHour,
   StartHour,

@@ -7,9 +7,9 @@ import { addDays, format, isToday } from "date-fns"
 import {
   AgendaDaysToShow,
   CalendarEvent,
-  EventItem,
   getAgendaEventsForDay,
-} from "@/components/event-calendar/event-calendar"
+} from "@/components/event-calendar"
+import { EventItem } from "./event-item"
 
 interface AgendaViewProps {
   currentDate: Date
@@ -72,12 +72,12 @@ export function AgendaView({
                 {format(day, "d MMM, EEEE")}
               </span>
               <div className="mt-6 space-y-2">
-                {dayEvents.map((event) => (
+                {dayEvents.map((event: unknown) => (
                   <EventItem
-                    key={event.id}
-                    event={event}
+                    key={(event as CalendarEvent).id}
+                    event={event as CalendarEvent}
                     view="agenda"
-                    onClick={(e) => handleEventClick(event, e)}
+                    onClick={(e) => handleEventClick(event as CalendarEvent, e)}
                   />
                 ))}
               </div>

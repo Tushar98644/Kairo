@@ -26,7 +26,7 @@ import {
   sortEvents,
   useEventVisibility,
   type CalendarEvent,
-} from "@/components/event-calendar/event-calendar"
+} from "@/components/event-calendar"
 import { DefaultStartHour } from "@/components/event-calendar/constants"
 import {
   Popover,

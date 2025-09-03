@@ -1,9 +1,10 @@
+import CalendarComponent from "@/components/comp";
 import React from "react";
 
 const SchedulePage: React.FC = () => {
     return (
-        <div className="h-screen w-screen flex items-center justify-center">
-            <h1>Schedule Page</h1>
+        <div className="flex mx-40 my-20 items-center justify-center">
+            <CalendarComponent />
         </div>
     );
 }

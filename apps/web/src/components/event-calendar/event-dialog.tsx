@@ -7,7 +7,7 @@ import { format, isBefore } from "date-fns"
 import type {
   CalendarEvent,
   EventColor,
-} from "@/components/event-calendar/event-calendar"
+} from "@/components/event-calendar"
 import {
   DefaultEndHour,
   DefaultStartHour,
