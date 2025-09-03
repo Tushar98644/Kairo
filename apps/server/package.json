@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch ./src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3"
+  },
+  "dependencies": {
+    "morgan": "^1.10.1"
+  }
+}
