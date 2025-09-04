@@ -12,6 +12,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SignOutButton } from "@clerk/nextjs";
 
 interface Profile {
     name: string;
@@ -174,15 +175,13 @@ export default function ProfileDropdown({
                         <DropdownMenuSeparator className="my-2 bg-gradient-to-r from-transparent via-zinc-200 to-transparent dark:via-zinc-800" />
 
                         <DropdownMenuItem asChild>
-                            <button
-                                type="button"
-                                className="w-full flex items-center gap-3 p-2.5 duration-200 bg-red-500/10 rounded-xl hover:bg-red-500/20 cursor-pointer border border-transparent hover:border-red-500/30 hover:shadow-sm transition-all group"
-                            >
-                                <LogOut className="w-4 h-4 text-red-500 group-hover:text-red-600" />
-                                <span className="text-sm font-medium text-red-500 group-hover:text-red-600">
-                                    Sign Out
+                                <span className="w-full flex items-center gap-3 p-2.5 duration-200 bg-red-500/10 rounded-xl hover:bg-red-500/20 cursor-pointer border border-transparent hover:border-red-500/30 hover:shadow-sm transition-all group"
+                                >
+                                    <LogOut className="w-4 h-4 text-red-500 group-hover:text-red-600" />
+                                    <span className="text-sm font-medium text-red-500 group-hover:text-red-600">
+                                        <SignOutButton>Sign Out</SignOutButton>
+                                    </span>
                                 </span>
-                            </button>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </div>

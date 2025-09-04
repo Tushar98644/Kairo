@@ -123,12 +123,12 @@ export default function LandingPage() {
               {mounted && theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
               <span className="sr-only">Toggle theme</span>
             </Button>
-            <Link
-              href="#"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Log in
-            </Link>
+              <Link
+                href="/sign-in"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Log in
+              </Link>
             <Button className="rounded-full">
               Get Started
               <ChevronRight className="ml-1 size-4" />

@@ -5,6 +5,7 @@ import helmet from "helmet";
 import ratelimit from "express-rate-limit";
 import morgan from "morgan";
 import userRoutes from "./modules/user/user.routes";
+import { clerkMiddleware } from "@clerk/express";
 
 const app = express();
 
@@ -21,9 +22,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.get("/", (req, res) => {
-    res.send("Hello from API v1");
-});
+app.use(clerkMiddleware());
+
 app.use('/api/v1/users', userRoutes);
 
 const port = process.env.PORT || 3000;
