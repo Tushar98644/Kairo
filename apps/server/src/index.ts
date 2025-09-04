@@ -4,8 +4,8 @@ import cors from "cors";
 import helmet from "helmet";
 import ratelimit from "express-rate-limit";
 import morgan from "morgan";
-import userRoutes from "./modules/user/user.routes";
-import { clerkMiddleware } from "@clerk/express";
+import { clerkMiddleware, requireAuth } from "@clerk/express";
+import workerRoutes from "./modules/worker/worker.routes";
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 
 app.use(clerkMiddleware());
 
-app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/service', workerRoutes, requireAuth());
 
 const port = process.env.PORT || 3000;
 
