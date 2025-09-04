@@ -32,6 +32,17 @@ class WorkerController {
       res.status(500).json({ message: err });
     }
   }
+  
+  async deleteWorker(req: Request, res: Response) {
+    try {
+      const email = req.params.email as string;
+      await workerService.deleteWorker(email);
+      res.status(204).send();
+    } catch (err) {
+      console.error("Error deleting worker:", err);
+      res.status(500).json({ message: err });
+    }
+  }
 }
 
 export const workerController = new WorkerController();

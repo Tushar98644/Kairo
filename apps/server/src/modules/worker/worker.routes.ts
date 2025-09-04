@@ -6,5 +6,6 @@ const router = Router();
 router.get("/", (req, res) => workerController.getWorkers(req, res));
 router.post("/", (req, res) => workerController.createWorker(req, res));
 router.put("/:id", (req, res) => workerController.updateWorker(req, res));
+router.delete("/:id", (req, res) => workerController.deleteWorker(req, res));
 
 export default router;

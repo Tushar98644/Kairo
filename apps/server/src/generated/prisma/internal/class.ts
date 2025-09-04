@@ -46,7 +46,6 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -57,7 +56,7 @@ const config: runtime.GetPrismaClientConfig = {
   },
   "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Worker {\n  id          String   @id @default(cuid())\n  firstName   String\n  lastName    String\n  email       String   @unique\n  phone       String?\n  skills      String[]\n  hourlyRate  Float?\n  isAvailable Boolean  @default(true)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n}\n",
   "inlineSchemaHash": "17b1ec5ced3889523cd2eeddec3ced0766e93bcc63ebdebf551c4f9f585875d8",
-  "copyEngine": true,
+  "copyEngine": false,
   "runtimeDataModel": {
     "models": {},
     "enums": {},

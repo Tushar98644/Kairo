@@ -30,6 +30,15 @@ class WorkerService {
             return null;
         }
     }
+    
+    async deleteWorker(email: string) {
+        try {
+            await prisma.worker.delete({ where: { email } });
+        } catch (error) {
+            console.error("Error deleting worker:", error);
+            throw error;
+        }
+    }
 }
 
 export const workerService = new WorkerService();
