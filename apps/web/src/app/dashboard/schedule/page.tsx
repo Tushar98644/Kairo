@@ -1,4 +1,4 @@
-import CalendarComponent from "@/components/comp";
+import CalendarComponent from "@/components/calendar";
 import React from "react";
 
 const SchedulePage: React.FC = () => {
