@@ -17,6 +17,10 @@ import {
 import {
   RiSlowDownLine,
   RiLeafLine,
+  RiUserLine,
+  RiInbox2Fill,
+  RiWallet2Fill,
+  RiCustomerService2Fill,
 } from "@remixicon/react";
 import Link from "next/link";
 import ProfileDropdown from "./ui/profile-dropdown";
@@ -36,6 +40,26 @@ const data = {
           title: "Schedule",
           url: "/dashboard/schedule",
           icon: RiLeafLine,
+        },
+        {
+          title: "Payments",
+          url: "/dashboard/payments",
+          icon: RiWallet2Fill,
+        },
+        {
+          title: "Profile",
+          url: "/dashboard/profile",
+          icon: RiUserLine,
+        },
+        {
+          title: "My Services",
+          url: "/dashboard/services",
+          icon: RiCustomerService2Fill,
+        },
+        {
+          title: "Requests",
+          url: "/dashboard/requests",
+          icon: RiInbox2Fill ,
         },
       ],
     },
