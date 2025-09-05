@@ -19,6 +19,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import ActionSearchBar from "@/components/ui/action-search-bar";
 
 export default function DashboardLayout({
   children,
@@ -54,7 +55,7 @@ export default function DashboardLayout({
                 </div>
               </div>
               {/* Right side */}
-              {/* <ActionButtons /> */}
+              <ActionSearchBar/>
             </header>
             <div className="overflow-hidden flex p-2">
               <div className="grid auto-rows-min @2xl:grid-cols-2 *:-ms-px *:-mt-px -m-px">
