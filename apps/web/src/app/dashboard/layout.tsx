@@ -58,9 +58,7 @@ export default function DashboardLayout({
               <ActionSearchBar/>
             </header>
             <div className="overflow-hidden flex p-2">
-              <div className="grid auto-rows-min @2xl:grid-cols-2 *:-ms-px *:-mt-px -m-px">
                 {children}
-              </div>
             </div>
           </div>
         </div>
