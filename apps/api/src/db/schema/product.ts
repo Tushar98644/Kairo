@@ -8,7 +8,7 @@ export const products = pgTable("products", {
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
   price: real("price").notNull(),
-  imageUrl: text("image").notNull(),
+  imageKey: varchar("image_key", { length: 255 }).notNull(),
   category: varchar("category", { length: 20 }).notNull(),
   latitude: doublePrecision("latitude").notNull(),
   longitude: doublePrecision("longitude").notNull(),

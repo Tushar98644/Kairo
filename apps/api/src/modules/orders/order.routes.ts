@@ -4,8 +4,6 @@ import { orderController } from "./order.controller";
 
 const router = Router();
 
-router.use(requireAuth());
-
 router.post("/", orderController.createOrder);   
 router.get("/me", orderController.getMyOrders);
 router.get("/:id", orderController.getOrderById); 

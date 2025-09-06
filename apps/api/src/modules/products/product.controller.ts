@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { clerkClient, getAuth } from "@clerk/express";
 import { productService } from "./product.service";
 import { insertProductSchema } from "../../db/schema/product";
+import { s3 } from "../../config/s3/client";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { generateSignedProducts } from "../../utils/sign.product";
 
 export class ProductController {
   async createProduct(req: Request, res: Response) {
@@ -51,7 +55,9 @@ export class ProductController {
   async getAllProducts(req: Request, res: Response) {
     try {
       const products = await productService.getAll();
-      res.status(200).json(products);
+      const signedProducts = await generateSignedProducts(products);
+      
+      return res.status(200).json(signedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
       res.status(500).json({ message: "Failed to fetch products" });
@@ -66,7 +72,14 @@ export class ProductController {
         res.status(404).json({ message: "Product not found" });
         return;
       }
-      res.status(200).json(product);
+      
+      const command = new GetObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: product.imageKey,
+      });
+      const signedUrl = await getSignedUrl(s3, command, { expiresIn: 3600 });
+      const signedProduct = { ...product, imageUrl: signedUrl };
+      res.status(200).json(signedProduct);
     } catch (error) {
       console.error("Error fetching product:", error);
       res.status(500).json({ message: "Failed to fetch product" });
@@ -83,7 +96,8 @@ export class ProductController {
       }
       
       const products = await productService.getByCategory(category);
-      res.status(200).json(products);
+      const signedProducts = await generateSignedProducts(products);
+      return res.status(200).json(signedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
       res.status(500).json({ message: "Failed to fetch products" });
@@ -100,7 +114,8 @@ export class ProductController {
       }
       
       const products = await productService.getBySeller(sellerEmail);
-      res.status(200).json(products);
+      const signedProducts = await generateSignedProducts(products);
+      res.status(200).json(signedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
       res.status(500).json({ message: "Failed to fetch products" });

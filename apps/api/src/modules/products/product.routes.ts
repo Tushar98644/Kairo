@@ -4,8 +4,6 @@ import { productController } from './product.controller';
 
 const router = Router();
 
-router.use(requireAuth());
-
 router.get('/', productController.getAllProducts);
 router.get('/category/:category', productController.getProductsByCategory); 
 router.get('/:id', productController.getProductById);         

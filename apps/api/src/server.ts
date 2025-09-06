@@ -5,7 +5,9 @@ import helmet from "helmet";
 import ratelimit from "express-rate-limit";
 import morgan from "morgan";
 import { clerkMiddleware, requireAuth } from "@clerk/express";
-import workerRoutes from "./modules/worker/worker.routes";
+import productRoutes from "./modules/products/product.routes";
+import orderRoutes from "./modules/orders/order.routes";
+import notificationRoutes from "./modules/notifications/notification.routes";
 
 const app = express();
 
@@ -24,7 +26,9 @@ app.use(cors(corsOptions));
 
 app.use(clerkMiddleware());
 
-app.use('/api/v1/service', workerRoutes, requireAuth());
+app.use('/api/v1/service', productRoutes, requireAuth());
+app.use('/api/v1/notifications', orderRoutes, requireAuth());
+app.use('/api/v1/notifications', notificationRoutes, requireAuth());
 
 const port = process.env.PORT || 3000;
 
