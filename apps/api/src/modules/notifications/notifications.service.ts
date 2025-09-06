@@ -1,12 +1,12 @@
 import { db } from '../../db/client';
-import { notifications, insertNotificationSchema } from '../../db/schema/notification';
+import { notifications } from '../../db/schema/notification';
 import { eq, desc } from 'drizzle-orm';
 
 type NewNotificationData = typeof notifications.$inferInsert;
 type Notification = typeof notifications.$inferSelect;
 
 export class NotificationService {
-  public async create(data: NewNotificationData): Promise<NewNotificationData> {
+  public async create(data: NewNotificationData): Promise<any> {
 
     const [newNotification] = await db
       .insert(notifications)

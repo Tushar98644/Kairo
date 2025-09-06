@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { clerkClient, getAuth } from "@clerk/express";
-import { NotificationService } from "./notification.service";
+import { NotificationService } from "./notifications.service";
 
 const notificationService = new NotificationService();
 
