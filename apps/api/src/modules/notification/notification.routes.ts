@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { requireAuth } from '@clerk/express';
-import { createPaymentIntent } from './payment.controller';
+import { getNotifications } from './notification.controller';
 
 const router = Router();
 router.use(requireAuth());
 
-router.post('/create-payment-intent', createPaymentIntent);
+router.get('/', getNotifications);
 
 export default router;
