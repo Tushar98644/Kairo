@@ -14,10 +14,22 @@ export class ProductController {
 
       const { emailAddresses } = await clerkClient.users.getUser(userId);
       const userEmail = emailAddresses[0]?.emailAddress;
-
+      
+      const { title, description, price, imageUrl, category, latitude, longitude } = req.body;
+      if (!title || !description || !price || !imageUrl || !category || !latitude || !longitude) {
+        res.status(400).json({ message: "Missing required fields" });
+        return;
+      }
+      
       const productData = insertProductSchema.safeParse({
-        ...req.body,
+        title,
+        description,
+        price,
+        imageUrl,
+        category,
         sellerEmail: userEmail,
+        latitude,
+        longitude
       });
 
       if (!productData.success) {

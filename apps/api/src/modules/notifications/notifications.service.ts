@@ -1,17 +1,18 @@
 import { db } from '../../db/client';
-import { notifications } from '../../db/schema/notification';
+import { notifications, type Notification, type NewNotification } from '../../db/schema/notification';
 import { eq, desc } from 'drizzle-orm';
 
-type NewNotificationData = typeof notifications.$inferInsert;
-type Notification = typeof notifications.$inferSelect;
-
-export class NotificationService {
-  public async create(data: NewNotificationData): Promise<any> {
+class NotificationService {
+  public async create(data: NewNotification): Promise<Notification> {
 
     const [newNotification] = await db
       .insert(notifications)
       .values(data)
       .returning();
+    
+    if (!newNotification) {
+      throw new Error('Failed to create notification');
+    }
 
     return newNotification;
   }
@@ -24,3 +25,5 @@ export class NotificationService {
       .orderBy(desc(notifications.createdAt));
   }
 }
+
+export const notificationService = new NotificationService();

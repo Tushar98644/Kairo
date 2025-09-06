@@ -1,5 +1,5 @@
 import { timestamps } from "@/utils/columns.helper";
-import { pgTable, uuid, text, varchar, boolean, real, doublePrecision, index } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, varchar, boolean, real, index, doublePrecision } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
 export const products = pgTable("products", {
@@ -8,7 +8,7 @@ export const products = pgTable("products", {
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
   price: real("price").notNull(),
-  image: text("image").notNull(),
+  imageUrl: text("image").notNull(),
   category: varchar("category", { length: 20 }).notNull(),
   latitude: doublePrecision("latitude").notNull(),
   longitude: doublePrecision("longitude").notNull(),
