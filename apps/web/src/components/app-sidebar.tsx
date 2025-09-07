@@ -129,11 +129,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           {item.icon && (
                             <item.icon
                               className="group-data-[active=true]/menu-button:text-primary"
-                              size={18}
+                              size={17}
                               aria-hidden="true"
                             />
                           )}
-                          <span className="text-xs">{item.title}</span>
+                          <span className="text-[11.5px]">{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

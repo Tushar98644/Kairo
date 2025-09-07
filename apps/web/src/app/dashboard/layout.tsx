@@ -31,7 +31,7 @@ export default function DashboardLayout({
       <AppSidebar />
       <SidebarInset className="my-2">
         <div className="px-4 md:px-6 lg:px-8">
-          <div className="w-full max-w-6xl mx-auto">
+          <div className="w-full mx-auto">
             <header className="flex flex-wrap gap-3 min-h-20 py-4 shrink-0 items-center transition-all ease-linear">
               {/* Left side */}
               <div className="flex flex-1 items-center gap-2">
