@@ -20,7 +20,7 @@ export default function MapboxMap({ points }: MapProps) {
   const [viewState, setViewState] = useState({
     longitude: 77.5946,
     latitude: 12.9716,
-    zoom: 12
+    zoom: 2
   });
 
   return (

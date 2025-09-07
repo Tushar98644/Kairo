@@ -19,8 +19,8 @@ export class ProductController {
       const { emailAddresses } = await clerkClient.users.getUser(userId);
       const userEmail = emailAddresses[0]?.emailAddress;
       
-      const { title, description, price, imageUrl, category, latitude, longitude } = req.body;
-      if (!title || !description || !price || !imageUrl || !category || !latitude || !longitude) {
+      const { title, description, price, imageKey, category, latitude, longitude } = req.body;
+      if (!title || !description || !price || !imageKey || !category || !latitude || !longitude) {
         res.status(400).json({ message: "Missing required fields" });
         return;
       }
@@ -29,7 +29,7 @@ export class ProductController {
         title,
         description,
         price,
-        imageUrl,
+        imageKey,
         category,
         sellerEmail: userEmail,
         latitude,

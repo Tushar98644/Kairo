@@ -15,7 +15,7 @@ const schema = {
 export const db = drizzle({ 
   connection: { 
     connectionString: process.env.DATABASE_URL!,
-    ssl: true
+    ssl: false
   },
   schema
 });

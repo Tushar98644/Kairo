@@ -26,8 +26,8 @@ app.use(cors(corsOptions));
 
 app.use(clerkMiddleware());
 
-app.use('/api/v1/service', productRoutes, requireAuth());
-app.use('/api/v1/notifications', orderRoutes, requireAuth());
+app.use('/api/v1/products', productRoutes, requireAuth());
+app.use('/api/v1/orders', orderRoutes, requireAuth());
 app.use('/api/v1/notifications', notificationRoutes, requireAuth());
 
 const port = process.env.PORT || 3000;

@@ -5,46 +5,50 @@ import { Search, MapPin, Filter, ShoppingCart, Heart, Star } from "lucide-react"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useFetchProducts } from "@/hooks/queries/useProductQuery";
 import MapboxMap from "@/components/map/mapbox";
+import { Product } from "@/types/product";
+import { getUserLocation } from "@/utils/getLocation";
+import { getDistance } from "@/utils/getDistance";
 
 const MyPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [userLocation, setUserLocation] = useState({ latitude: 0, longitude: 0 });
 
-  const products = [
-    {
-      id: 1,
-      title: "Fresh Organic",
-      price: "$5.99",
-      location: "2.3 km away",
-      category: "Food",
-      rating: 4.8,
-      reviews: 24,
-      seller: "Green Farm Co.",
-      image: "/basic-img.png",
-      description: "Locally grown organic tomatoes, perfect for salads and cooking"
-    },
-    {
-      id: 2,
-      title: "Vintage Leather",
-      price: "$89.99",
-      location: "1.8 km away",
-      category: "Fashion",
-      rating: 4.9,
-      reviews: 18,
-      seller: "Style Vintage",
-      image: "/basic-img.png",
-      description: "Premium quality vintage leather jacket in excellent condition"
-    },
-  ];
+  
+  useEffect(() => {
+    (async () => {
+      try {
+        const location = await getUserLocation();
+        setUserLocation(location);
+        console.log("Location:", location);
+      } catch (err) {
+        console.error("Location error:", err);
+      }
+    })();
+  }, []);
 
-  const categories = ["all", "Food", "Electronics", "Fashion", "Crafts", "Books", "Sports"];
+  
+  const { data: products = [] } = useFetchProducts();
 
-  const filteredProducts = products.filter(product => 
+  const categories = ["all", "Food & Beverages", "Electronics", "Fashion", "Crafts", "Books", "Sports"];
+
+  const filteredProducts = products.filter((product: Product) => 
     (selectedCategory === "all" || product.category === selectedCategory) &&
     (searchQuery === "" || product.title.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+  
+  const productsWithDistance = filteredProducts.map((product: Product) => ({
+    ...product,
+    distance: getDistance(
+      userLocation.latitude,
+      userLocation.longitude,
+      product.latitude,
+      product.longitude
+    ),
+  }));
 
   return (
     <div className="h-full w-full">
@@ -98,31 +102,15 @@ const MyPage = () => {
         <div className="grid lg:grid-cols-7 gap-6">
           {/* Map Section */}
           <div className="lg:col-span-5">
-            <MapboxMap points={
-              [
-                {
-                  id: 1,
-                  latitude: 37.7749,
-                  longitude: -122.4194,
-                  title: 'San Francisco',
-                  price: '$100'
-                },
-                {
-                  id: 2,
-                  latitude: 34.0522,
-                  longitude: -118.2437,
-                  title: 'Los Angeles',
-                  price: '$200'
-                },
-                {
-                  id: 3,
-                  latitude: 40.7128,
-                  longitude: -74.0060,
-                  title: 'New York',
-                  price: '$300'
-                }
-              ]
-            }/>
+            <MapboxMap
+              points={filteredProducts.map((product: Product) => ({
+                id: product.id,
+                latitude: product.latitude,
+                longitude: product.longitude,
+                title: product.title,
+                price: product.price,
+              }))}
+            />
           </div>
 
           {/* Products Grid */}
@@ -142,7 +130,7 @@ const MyPage = () => {
             </div>
 
             <div className="grid md:grid-cols-1 gap-6">
-              {filteredProducts.map((product) => (
+              {productsWithDistance.map((product: Product) => (
                 <ShiftCard
                   key={product.id}
                   className="bg-card border hover:shadow-lg transition-all duration-300"
@@ -154,14 +142,14 @@ const MyPage = () => {
                       </Badge>
                     </div>
                   }
-                  mainImageSrc={product.image}
+                  mainImageSrc={product.imageUrl}
                   mainImageAlt={product.title}
-                  bottomTitle={product.seller}
+                  bottomTitle={product.sellerEmail}
                   bottomTitleIcon={
                     <div className="flex items-center gap-1">
                       <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      <span className="text-xs">{product.rating}</span>
-                      <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                      <span className="text-xs">{4.5}</span>
+                      <span className="text-xs text-muted-foreground">({20})</span>
                     </div>
                   }
                   bottomDescription={
@@ -174,7 +162,7 @@ const MyPage = () => {
                           <span className="text-lg font-bold text-primary">{product.price}</span>
                           <div className="flex items-center gap-1 text-muted-foreground">
                             <MapPin className="w-3 h-3" />
-                            <span className="text-xs">{product.location}</span>
+                            <span className="text-xs">{product.distance} km</span>
                           </div>
                         </div>
                       </div>
