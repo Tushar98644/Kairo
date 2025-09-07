@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar, real, timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { timestamps } from "@/utils/columns.helper";
+import { timestamps } from "../../utils/columns.helper";
 
 export const orderStatusEnum = pgEnum('order_status', ['PENDING', 'PAID', 'CANCELLED']);
 

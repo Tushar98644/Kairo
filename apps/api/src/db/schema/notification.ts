@@ -1,4 +1,4 @@
-import { timestamps } from '@/utils/columns.helper';
+import { timestamps } from '../../utils/columns.helper';
 import { pgTable, text, varchar, boolean, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
