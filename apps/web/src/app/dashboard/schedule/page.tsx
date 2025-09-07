@@ -3,7 +3,7 @@ import React from "react";
 
 const SchedulePage: React.FC = () => {
     return (
-        <div className="flex mx-40 my-20 items-center justify-center">
+        <div className="flex mx-40 my-4 items-center justify-center">
             <CalendarComponent />
         </div>
     );

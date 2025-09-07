@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 
 const transition = {
-  type: "spring",
+  type: "spring" as const,
   bounce: 0.1,
   duration: 0.25,
 }
@@ -86,7 +86,7 @@ const DynamicToolbarExpandable = React.memo<DynamicToolbarExpandableProps>(
     const [contentRef, contentBounds] = useMeasure()
     const [menuRef, menuBounds] = useMeasure()
     const menuContainerRef = useRef<any>(null)
-    const ref = useRef<HTMLDivElement>(null)
+    const ref = useRef<HTMLDivElement | null>(null)
     const [maxWidth, setMaxWidth] = useState(0)
 
     const heightContent = contentBounds.height
@@ -97,7 +97,7 @@ const DynamicToolbarExpandable = React.memo<DynamicToolbarExpandableProps>(
       setActive(null)
     }, [setIsOpen, setActive])
 
-    useClickOutside(ref, handleClickOutside)
+    useClickOutside(ref as React.RefObject<HTMLDivElement>, handleClickOutside)
 
     useEffect(() => {
       if (!widthContainer || maxWidth > 0) return
@@ -224,7 +224,7 @@ const DynamicToolbarExpandable = React.memo<DynamicToolbarExpandableProps>(
             {badgeText}
           </Badge>
         )}
-
+        
         <MotionConfig transition={transition}>
           <div
             className="w-full rounded-2xl shadow-[0_0_0_1px_rgba(0,0,0,0.08),0px_2px_2px_rgba(0,0,0,0.04),0px_8px_16px_-4px_rgba(0,0,0,0.04)] dark:shadow-[0_0_0_1px_rgba(255,252,240,0.08),0px_2px_2px_rgba(0,0,0,0.2),0px_8px_16px_-4px_rgba(0,0,0,0.3)] bg-background overflow-hidden"
@@ -334,6 +334,7 @@ function useMeasure(): [
   })
 
   const [node, setNode] = useState<HTMLElement | null>(null)
+  // @ts-ignore
   const observer = useRef<ResizeObserver>()
 
   const disconnect = useCallback(() => {

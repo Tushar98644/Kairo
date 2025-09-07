@@ -4,7 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { CardSwipe } from '@/components/ui/swipe-card';
 import Map, { Marker } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapPin } from 'lucide-react';
+// import { MapPin } from 'lucide-react';
 
 const images = [
    {
@@ -13,28 +13,13 @@ const images = [
    },
 ];
 
-const fetchServices = async (latitude: number, longitude: number) => {
-  console.log(`Fetching services for: ${latitude}, ${longitude}`);
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  return images;
-};
-
-
 const ServicePage = () => {
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  const handleMapClick = useCallback(async (event) => {
-    const { lng, lat } = event.lngLat;
+  const handleMapClick = useCallback(async () => {
     setLoading(true);
     setInitialLoad(false);
-    setSelectedLocation({ longitude: lng, latitude: lat });
-    
-    const fetchedServices = await fetchServices(lat, lng);
-    setServices(fetchedServices);
-    setLoading(false);
   }, []);
 
   return (
@@ -73,15 +58,15 @@ const ServicePage = () => {
               mapStyle="mapbox://styles/mapbox/streets-v11"
               onClick={handleMapClick}
             >
-              {selectedLocation && (
+              {/*{selectedLocation && (
                 <Marker
-                  longitude={selectedLocation.longitude}
-                  latitude={selectedLocation.latitude}
+                  longitude={19}
+                  latitude={23}
                   anchor="bottom"
                 >
                   <MapPin className="w-8 h-8 text-blue-600" fill="currentColor" />
                 </Marker>
-              )}
+              )}*/}
             </Map>
           </div>
         </section>
@@ -110,11 +95,11 @@ const ServicePage = () => {
               </div>
             )}
 
-            {!loading && !initialLoad && services.length > 0 && (
+            {!loading && !initialLoad && (
               <CardSwipe slideShadows={true} images={images}/>
             )}
 
-            {!loading && !initialLoad && services.length === 0 && (
+            {!loading && !initialLoad && (
                 <div className="text-center text-muted-foreground text-sm">
                     No services found for this location.
                 </div>
