@@ -1,0 +1,43 @@
+name: Deploy Express App to EC2
+
+on:
+  push:
+    branches:
+      - main 
+      
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@v1
+
+    - name: Install dependencies
+      run: |
+        cd apps/api
+        bun install
+
+    - name: Build the app
+      run: |
+        cd apps/api
+        bun run build
+
+    - name: Sync code to EC2
+      run: |
+        rsync -avz --exclude '.env' ./apps/api/ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+
+    - name: Restart the app on EC2
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          cd ${{ secrets.APP_DIR }}
+          pm2 stop api_server || true
+          pm2 start index.js --name api_server --update-env
+          pm2 save
