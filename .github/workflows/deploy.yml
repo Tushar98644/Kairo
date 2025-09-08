@@ -22,16 +22,15 @@ jobs:
         bun install
         bun run build
 
-    - name: Setup SSH key
+    - name: Set up SSH key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.EC2_KEY }}" | tr -d '\r' | ssh-add -
         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
     - name: Sync project files to EC2
       run: |
-        rsync -avz -e "ssh -i ~/.ssh/id_rsa" --exclude '.git' --exclude 'node_modules' --exclude '.env' ./ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+        rsync -avz --chown=ubuntu:ubuntu -e "ssh -i ~/.ssh/id_rsa" --exclude '.git' --exclude 'node_modules' --exclude '.env' ./ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
 
     - name: Deploy App and Restart Services on EC2
       uses: appleboy/ssh-action@v0.1.7
