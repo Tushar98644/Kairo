@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main 
-      
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -13,31 +13,35 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Bun
-      uses: oven-sh/setup-bun@v1
-
-    - name: Install dependencies
+    - name: Set up Bun and build application
       run: |
         cd apps/api
         bun install
-
-    - name: Build the app
-      run: |
-        cd apps/api
         bun run build
 
-    - name: Sync code to EC2
+    - name: Setup SSH key
       run: |
-        rsync -avz --exclude '.env' ./apps/api/ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Restart the app on EC2
+    - name: Sync project files to EC2
+      run: |
+        rsync -avz -e "ssh -i ~/.ssh/id_rsa" --exclude '.git' --exclude 'node_modules' --exclude '.env' ./ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+
+    - name: Deploy App and Restart Services on EC2
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
         script: |
+          echo "Restarting Node.js application..."
           cd ${{ secrets.APP_DIR }}
-          pm2 stop api_server || true
-          pm2 start index.js --name api_server --update-env
+          pm2 restart api_server || pm2 start index.js --name api_server --update-env
           pm2 save
+
+          echo "Updating Nginx and Certbot containers..."
+          cd ${{ secrets.APP_DIR }}
+          docker-compose up -d
