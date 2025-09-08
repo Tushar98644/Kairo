@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { clerkClient, getAuth } from "@clerk/express";
 import { notificationService } from "./notifications.service";
-import { insertNotificationSchema } from "@/db/schema/notification";
+import { insertNotificationSchema } from "../../db/schema/notification";
 
 class NotificationController {
   

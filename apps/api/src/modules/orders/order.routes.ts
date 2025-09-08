@@ -1,4 +1,3 @@
-import { requireAuth } from "@clerk/express";
 import { Router } from "express";
 import { orderController } from "./order.controller";
 
