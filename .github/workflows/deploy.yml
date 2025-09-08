@@ -27,9 +27,16 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.EC2_KEY }}
 
-    - name: Sync entire project to EC2
+    - name: Sync API, Docker, and Nginx directories to EC2
       run: |
-        rsync -avz --delete --chown=ubuntu:ubuntu -e "ssh -o StrictHostKeyChecking=no" --exclude '.git' --exclude '**/node_modules' --exclude '.env' ./ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+        rsync -avzR --delete -e "ssh -o StrictHostKeyChecking=no" \
+        --exclude='**/node_modules' \
+        --exclude='apps/web/' \
+        --exclude='apps/api/src' \
+        --exclude='apps/api/.env' \
+        --exclude='apps/api/drizzle' \
+        ./docker ./nginx ./apps/api \
+        ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
         
     - name: Execute remote commands on EC2
       uses: appleboy/ssh-action@v1.2.2
