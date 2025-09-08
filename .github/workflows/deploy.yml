@@ -3,7 +3,7 @@ name: Deploy Express App to EC2
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   deploy:
@@ -11,39 +11,48 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    
-    - name: Set up Bun
-      uses: oven-sh/setup-bun@v1
-        
+      uses: actions/checkout@v4
+
     - name: Set up Bun and build application
-      run: |
-        cd apps/api
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
+    - run: |
         bun install
         bun run build
+      working-directory: ./apps/api
 
-    - name: Set up SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_KEY }}" | tr -d '\r' | ssh-add -
-        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.9.1
+      with:
+        ssh-private-key: ${{ secrets.EC2_KEY }}
 
     - name: Sync project files to EC2
       run: |
-        rsync -avz --chown=ubuntu:ubuntu -e "ssh -i ~/.ssh/id_rsa" --exclude '.git' --exclude 'node_modules' --exclude '.env' ./ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
-
-    - name: Deploy App and Restart Services on EC2
-      uses: appleboy/ssh-action@v0.1.7
+        rsync -avz --delete --chown=ubuntu:ubuntu -e "ssh -o StrictHostKeyChecking=no" --exclude '.git' --exclude 'node_modules' --exclude '.env' ./apps/api/ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+        
+    - name: Execute remote commands on EC2
+      uses: appleboy/ssh-action@v1.2.2
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
         script: |
-          echo "Restarting Node.js application..."
+          echo "Navigating to app directory..."
           cd ${{ secrets.APP_DIR }}
-          pm2 restart api_server || pm2 start index.js --name api_server --update-env
-          pm2 save
+          
+          echo "Installing production dependencies and generate build"
+          bun install --production
 
+          echo "Restarting Node.js application with pm2..."
+          pm2 restart api_server || pm2 start dist/server.js --name api_server --update-env
+          pm2 save
+          
           echo "Updating Nginx and Certbot containers..."
-          cd ${{ secrets.APP_DIR }}
-          docker-compose up -d
+          if [ -f "docker-compose.yml" ]; then
+            docker compose up -d --build
+          else
+            echo "docker-compose.yml not found, skipping container updates."
+          fi
+          
+          echo "Deployment complete!"
