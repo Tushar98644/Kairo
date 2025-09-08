@@ -1,4 +1,4 @@
-name: Deploy Express App to EC2
+name: Deploy Full Project to EC2
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Bun and build application
+    - name: Set up Bun and build the API
       uses: oven-sh/setup-bun@v2
       with:
         bun-version: latest
@@ -27,9 +27,9 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.EC2_KEY }}
 
-    - name: Sync project files to EC2
+    - name: Sync entire project to EC2
       run: |
-        rsync -avz --delete --chown=ubuntu:ubuntu -e "ssh -o StrictHostKeyChecking=no" --exclude '.git' --exclude 'node_modules' --exclude '.env' ./apps/api/ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
+        rsync -avz --delete --chown=ubuntu:ubuntu -e "ssh -o StrictHostKeyChecking=no" --exclude '.git' --exclude '**/node_modules' --exclude '.env' ./ ubuntu@${{ secrets.EC2_HOST }}:${{ secrets.APP_DIR }}
         
     - name: Execute remote commands on EC2
       uses: appleboy/ssh-action@v1.2.2
@@ -38,21 +38,24 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_KEY }}
         script: |
-          echo "Navigating to app directory..."
+          echo "Navigating to project root: ${{ secrets.APP_DIR }}"
           cd ${{ secrets.APP_DIR }}
           
-          echo "Installing production dependencies and generate build"
+          echo "Looking for docker-compose.yml and running it..."
+          if [ -f "docker/docker-compose.yml" ]; then
+            sudo docker compose -f docker/docker-compose.yml up -d --build
+          else
+            echo "docker-compose.yml not found in docker/, skipping."
+          fi
+
+          echo "Navigating to API directory to restart the service..."
+          cd ${{ secrets.APP_DIR }}/apps/api
+          
+          echo "Installing production dependencies for the API..."
           bun install --production
 
-          echo "Restarting Node.js application with pm2..."
+          echo "Restarting the API server with pm2..."
           pm2 restart api_server || pm2 start dist/server.js --name api_server --update-env
           pm2 save
-          
-          echo "Updating Nginx and Certbot containers..."
-          if [ -f "docker-compose.yml" ]; then
-            docker compose up -d --build
-          else
-            echo "docker-compose.yml not found, skipping container updates."
-          fi
           
           echo "Deployment complete!"
