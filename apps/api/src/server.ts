@@ -8,6 +8,7 @@ import { clerkMiddleware, requireAuth } from "@clerk/express";
 import productRoutes from "./modules/products/product.routes";
 import orderRoutes from "./modules/orders/order.routes";
 import notificationRoutes from "./modules/notifications/notification.routes";
+import { userRoutes } from "./modules/users/routes";
 
 const app = express();
 
@@ -26,9 +27,7 @@ app.use(cors(corsOptions));
 
 app.use(clerkMiddleware());
 
-app.use('/api/v1/products', productRoutes, requireAuth());
-app.use('/api/v1/orders', orderRoutes, requireAuth());
-app.use('/api/v1/notifications', notificationRoutes, requireAuth());
+app.use('/api/', userRoutes);
 
 const port = process.env.PORT || 3000;
 

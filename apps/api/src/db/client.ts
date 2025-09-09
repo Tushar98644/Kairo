@@ -1,15 +1,9 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import * as ordersSchema from './schema/order';
-import * as orderItemSchema from './schema/orderItem';
-import * as productsSchema from './schema/product';
-import * as notificationSchema from './schema/notification';
+import * as userSchema from './schema/users';
 
 const schema = {
-  ...ordersSchema,
-  ...orderItemSchema,
-  ...productsSchema,
-  ...notificationSchema,
+  ...userSchema,
 };
 
 export const db = drizzle({ 
