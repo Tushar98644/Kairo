@@ -1,152 +1,100 @@
 "use client";
 
-import * as React from "react";
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
-import { BellOff, CircleUserRound, CreditCard, ShoppingCart, CalendarCheck, Store, PlusCircle } from 'lucide-react'
 import Link from "next/link";
-import ProfileDropdown from "./ui/profile-dropdown";
-import { usePathname } from "next/navigation";
+import {
+  Home,
+  FileText,
+  Settings,
+  PlusCircle,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { UserButton, useClerk } from "@clerk/nextjs";
+import { CreateStoryDialog } from "./create-story-dialog";
+import { useState } from "react";
 
-const data = {
-  navMain: [
-    {
-      id: "store",
-      title: "Store",
-      items: [
-        {
-          title: "Marketplace",
-          url: "/dashboard/marketplace",
-          icon: Store,
-          type: "link",
-          isActive: true
-        },
-        {
-          title: "My Products",
-          url: "/dashboard/products",
-          icon: ShoppingCart, 
-          type: "link",
-          badge: { text: "12", ariaLabel: "12 products" }
-        },
-        {
-          title: "Add Product",
-          url: "/dashboard/products/new",
-          icon: PlusCircle,
-          type: "action",
-          permission: "seller" 
-        }
-      ]
-    },
+export function AppSidebar() {
+  const { signOut } = useClerk();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    {
-      id: "sales",
-      title: "Sales & Operations",
-      items: [
-        {
-          title: "Orders",
-          url: "/dashboard/orders",
-          icon: ShoppingCart,
-          type: "link",
-          badge: { text: "3", ariaLabel: "3 new orders" } 
-        },
-        {
-          title: "Payments",
-          url: "/dashboard/payments",
-          icon: CreditCard,
-          type: "link"
-        },
-        {
-          title: "Schedule",
-          url: "/dashboard/schedule",
-          icon: CalendarCheck,
-          type: "link"
-        },
-        {
-          title: "Notifications",
-          url: "/dashboard/notifications",
-          icon: BellOff,
-          type: "panel",
-          unreadCount: 5 
-        }
-      ]
-    },
-
-    {
-      id: "account",
-      title: "Account",
-      items: [
-        {
-          title: "Profile",
-          url: "/dashboard/profile",
-          icon: CircleUserRound,
-          type: "link"
-        },
-      ]
-    }
-  ]
-};
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  
-  const pathname = usePathname();
-  
   return (
-    <Sidebar collapsible="icon" variant="inset" {...props}>
-      <SidebarHeader className="h-16 max-md:mt-2 mb-2 justify-center">
-        
-        <span className="font-semibold text-sm px-4">KAIRO</span>
-      </SidebarHeader>
-      <SidebarContent>
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel className="uppercase text-[11.5px]">
-              {item.title}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="px-3">
-                {item.items.map((item) => {
-                  const isActive = pathname === item.url;
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        className="group/menu-button hover:bg-pink-500/40 group-data-[collapsible=icon]:px-[5px]! gap-3 h-8 [&>svg]:size-auto"
-                        tooltip={item.title}
-                        isActive={isActive}
-                      >
-                        <Link href={item.url}>
-                          {item.icon && (
-                            <item.icon
-                              className="group-data-[active=true]/menu-button:text-primary"
-                              size={17}
-                              aria-hidden="true"
-                            />
-                          )}
-                          <span className="text-[11.5px]">{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-      <SidebarFooter>
-        <ProfileDropdown />
-      </SidebarFooter>
-    </Sidebar>
+    <>
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+          <TooltipProvider>
+            {/* Create New Story Button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsDialogOpen(true)}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 md:h-8 md:w-8"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  <span className="sr-only">Create Story</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Create Story</TooltipContent>
+            </Tooltip>
+
+            {/* Dashboard Link */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/dashboard"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Home className="h-5 w-5" />
+                  <span className="sr-only">Dashboard</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Dashboard</TooltipContent>
+            </Tooltip>
+
+            {/* All Stories Link */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/dashboard/stories"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <FileText className="h-5 w-5" />
+                  <span className="sr-only">Stories</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Stories</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </nav>
+
+        {/* Bottom of Sidebar (Settings, User Profile) */}
+        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/dashboard/"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Settings className="h-5 w-5" />
+                  <span className="sr-only">Settings</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Settings</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <div className="py-2">
+            <UserButton afterSignOutUrl="/" />
+          </div>
+        </nav>
+      </aside>
+      <CreateStoryDialog
+        isOpen={isDialogOpen}
+        setIsOpen={setIsDialogOpen}
+      />
+    </>
   );
 }

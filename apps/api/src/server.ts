@@ -4,17 +4,15 @@ import cors from "cors";
 import helmet from "helmet";
 import ratelimit from "express-rate-limit";
 import morgan from "morgan";
-import { clerkMiddleware, requireAuth } from "@clerk/express";
-import productRoutes from "./modules/products/product.routes";
-import orderRoutes from "./modules/orders/order.routes";
-import notificationRoutes from "./modules/notifications/notification.routes";
+import { requireAuth } from "@clerk/express";
 import { userRoutes } from "./modules/users/routes";
+import { storyRoutes } from "./modules/stories/routes";
 
 const app = express();
 
 app.use(express.json());
 app.use(helmet());
-app.use(ratelimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+// app.use(ratelimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 app.use(morgan("dev"));
 
 const corsOptions = {
@@ -23,11 +21,11 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+
 app.use(cors(corsOptions));
 
-app.use(clerkMiddleware());
-
 app.use('/api/', userRoutes);
+app.use('/api/', requireAuth(), storyRoutes);
 
 const port = process.env.PORT || 3000;
 

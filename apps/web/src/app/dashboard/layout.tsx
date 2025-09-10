@@ -1,25 +1,4 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Experiment 03 - Crafted.is",
-};
-
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import ActionSearchBar from "@/components/ui/action-search-bar";
 
 export default function DashboardLayout({
   children,
@@ -27,42 +6,14 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
+    <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <AppSidebar />
-      <SidebarInset className="my-2">
-        <div className="px-4 md:px-6 lg:px-8">
-          <div className="w-full mx-auto">
-            <header className="flex flex-wrap gap-3 min-h-20 py-4 shrink-0 items-center transition-all ease-linear">
-              {/* Left side */}
-              <div className="flex flex-1 items-center gap-2">
-                <SidebarTrigger className="-ms-1" />
-                <div className="max-lg:hidden lg:contents">
-                  <Separator
-                    orientation="vertical"
-                    className="me-2 data-[orientation=vertical]:h-4"
-                  />
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      <BreadcrumbItem className="hidden md:block">
-                        <BreadcrumbLink href="#">Home</BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator className="hidden md:block" />
-                      <BreadcrumbItem>
-                        <BreadcrumbPage>Dashboard</BreadcrumbPage>
-                      </BreadcrumbItem>
-                    </BreadcrumbList>
-                  </Breadcrumb>
-                </div>
-              </div>
-              {/* Right side */}
-              <ActionSearchBar/>
-            </header>
-            <div className="overflow-hidden flex p-2">
-                {children}
-            </div>
-          </div>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        {/* You can add a simple header here for mobile navigation if needed */}
+        <main className="flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+          {children}
+        </main>
+      </div>
+    </div>
   );
 }
