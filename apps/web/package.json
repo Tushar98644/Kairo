@@ -12,6 +12,7 @@
     "@blocknote/core": "^0.37.0",
     "@blocknote/mantine": "^0.37.0",
     "@blocknote/react": "^0.37.0",
+    "@blocknote/xl-ai": "^0.37.0",
     "@clerk/elements": "^0.23.60",
     "@clerk/nextjs": "^6.31.8",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -42,7 +43,9 @@
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0",
     "react-map-gl": "^8.0.4",
-    "sonner": "^2.0.7"
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.1.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

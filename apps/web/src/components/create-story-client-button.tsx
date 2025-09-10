@@ -5,7 +5,6 @@ import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CreateStoryDialog } from "./create-story-dialog";
 
-// Add a variant prop
 interface CreateStoryClientButtonProps {
   variant?: "default" | "link";
   className?: string;
