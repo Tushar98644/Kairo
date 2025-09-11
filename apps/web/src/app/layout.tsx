@@ -8,7 +8,7 @@ import AppProvider from "@/providers/app-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "SaaSify - Streamline Your Workflow",
+  title: "Kairo",
   description:
     "Boost productivity, reduce costs, and scale your business with our all-in-one SaaS platform.",
 };

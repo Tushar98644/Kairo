@@ -1,36 +1,52 @@
 "use client";
 
 import {
+  useCreateBlockNote,
   FormattingToolbar,
   FormattingToolbarController,
-  getDefaultReactSlashMenuItems,
   getFormattingToolbarItems,
   SuggestionMenuController,
-  useCreateBlockNote,
+  getDefaultReactSlashMenuItems,
 } from "@blocknote/react";
+import { Block, BlockNoteEditor, filterSuggestionItems } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
-import { en } from "@blocknote/core/locales";
-import { en as aiEn } from "@blocknote/xl-ai/locales";
-import {
-  AIMenuController,
-  AIToolbarButton,
-  createAIExtension,
-  createBlockNoteAIClient,
-  getAISlashMenuItems,
-} from "@blocknote/xl-ai";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
-import { BlockNoteEditor, filterSuggestionItems } from "@blocknote/core";
+import { Wand2 } from "lucide-react";
+import { useState } from "react";
+import { insertMagicAi } from "@/lib/ai-handler"; 
 
-const client = createBlockNoteAIClient({
-  apiKey: "PLACEHOLDER",
-  baseURL:"https://localhost:3000/ai",
+const insertMagicSlashItem = (
+  editor: BlockNoteEditor,
+  setAiSuggestion: any
+) => ({
+    title: 'Ask AI',
+    onItemClick: () => insertMagicAi(editor, setAiSuggestion),
+    aliases: ['ai', 'magic'],
+    group: 'AI',
+    icon: <Wand2 size={18} />,
+    subtext: 'Generate text with AI',
 });
 
-const model = ({});
+const MagicToolbarButton = (props: {
+  editor: BlockNoteEditor,
+  setAiSuggestion: (suggestion: any) => void
+}) => (
+  <button
+    className="bn-toolbar-button"
+    onClick={() => insertMagicAi(props.editor, props.setAiSuggestion)}
+  >
+    <Wand2 size={18} />
+  </button>
+);
+
 
 export default function Editor() {
-  
+  const [aiSuggestion, setAiSuggestion] = useState<{
+    block: Block;
+    originalContent: any;
+  } | null>(null);
+
   async function uploadFile(file: File) {
     const body = new FormData();
     body.append("file", file);
@@ -38,48 +54,74 @@ export default function Editor() {
       method: "POST",
       body: body,
     });
-    return (await ret.json()).data.url.replace(
-      "tmpfiles.org/",
-      "tmpfiles.org/dl/",
-    );
+    return (await ret.json()).data.url.replace("tmpfiles.org/", "tmpfiles.org/dl/");
   }
-  const editor = useCreateBlockNote({
-    uploadFile,
-    dictionary: {
-      ...en,
-      ai: aiEn,
-    },
-    extensions: [
-      createAIExtension({
-        model: model
-      }),
-    ],
-  });
+
+  const editor = useCreateBlockNote({ uploadFile });
 
   return (
-    <div className="prose prose-stone dark:prose-invert max-w-full">
+    <div className="prose prose-stone dark:prose-invert max-w-full relative">
       <BlockNoteView
         editor={editor}
         theme={"light"}
         formattingToolbar={false}
         slashMenu={false}
       >
-        <AIMenuController />
-        <FormattingToolbarWithAI />
+        <FormattingToolbarWithAI editor={editor} setAiSuggestion={setAiSuggestion}/>
         <SuggestionMenuWithAI editor={editor} />
+        {aiSuggestion && (
+          <AIReviewMenu editor={editor} suggestion={aiSuggestion} setAiSuggestion={setAiSuggestion} />
+        )}
       </BlockNoteView>
     </div>
   );
 }
 
-function FormattingToolbarWithAI() {
+function AIReviewMenu(props: {
+  editor: BlockNoteEditor,
+  suggestion: { block: Block; originalContent: any },
+  setAiSuggestion: (suggestion: null) => void
+}) {
+  const { editor, suggestion, setAiSuggestion } = props;
+
+  const handleAccept = () => {
+    editor.updateBlock(suggestion.block, {
+      props: { backgroundColor: "default" },
+    });
+    setAiSuggestion(null);
+  };
+
+  const handleReject = () => {
+    editor.updateBlock(suggestion.block, {
+      content: suggestion.originalContent,
+      props: { backgroundColor: "default" },
+    });
+    setAiSuggestion(null);
+  };
+
+  return (
+    <div className="absolute top-full mt-2 ml-4 z-10 bg-white dark:bg-neutral-800 shadow-lg rounded-md p-2 flex gap-2">
+      <button className="text-sm px-3 py-1 bg-blue-500 text-white rounded" onClick={handleAccept}>
+        Accept
+      </button>
+      <button className="text-sm px-3 py-1 bg-neutral-200 dark:bg-neutral-600 rounded" onClick={handleReject}>
+        Reject
+      </button>
+    </div>
+  );
+}
+
+
+function FormattingToolbarWithAI(props: {
+  editor: BlockNoteEditor<any, any, any>;
+  setAiSuggestion: (suggestion: null) => void;
+}) {
   return (
     <FormattingToolbarController
       formattingToolbar={() => (
         <FormattingToolbar>
           {...getFormattingToolbarItems()}
-          {/* Add the AI button */}
-          <AIToolbarButton />
+          <MagicToolbarButton editor={props.editor} setAiSuggestion={props.setAiSuggestion}/>
         </FormattingToolbar>
       )}
     />
@@ -95,7 +137,7 @@ function SuggestionMenuWithAI(props: {
         filterSuggestionItems(
           [
             ...getDefaultReactSlashMenuItems(props.editor),
-            ...getAISlashMenuItems(props.editor),
+            insertMagicSlashItem(props.editor, query),
           ],
           query,
         )
