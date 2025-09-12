@@ -1,8 +1,10 @@
 import express from "express";
+import 'dotenv/config'
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { app } from "./agent/graph";
 
 const server = express();
+
 server.use(express.json());
 
 const PORT = process.env.PORT || 8001;

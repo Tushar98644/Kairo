@@ -1,7 +1,5 @@
-import { DuckDuckGoSearch } from '@langchain/community/tools/duckduckgo_search'
-import { tool } from '@langchain/core/tools'
-import { z } from 'zod'
+import { TavilySearch } from "@langchain/tavily";
 
-export const webSearchTool = new DuckDuckGoSearch({
-  maxResults: 1,
-});
+export const webSearchTool = new TavilySearch({
+  maxResults: 2,
+})

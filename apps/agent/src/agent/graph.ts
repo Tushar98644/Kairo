@@ -9,7 +9,9 @@ const tools = [webSearchTool];
 
 const llm = new ChatGoogleGenerativeAI({
   model: "gemini-2.5-pro",
+  apiKey: process.env.GEMINI_API_KEY,
   temperature: 0,
+  maxRetries: 2,
   streaming: true,
 });
 
@@ -39,7 +41,10 @@ const workflow = new StateGraph(GraphAnnotation)
   .addNode("agent", callModel)
   .addNode("call_tools", toolNode)
   .addEdge(START, "agent")
-  .addConditionalEdges("agent", shouldContinue)
+  .addConditionalEdges("agent", shouldContinue, {
+    "tools": "call_tools",
+    "__end__": "__end__"
+  })
   .addEdge("call_tools", "agent");
 
 export const app = workflow.compile();
