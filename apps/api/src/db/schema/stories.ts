@@ -1,6 +1,6 @@
 import { pgTable, uuid, text } from "drizzle-orm/pg-core";
 import { users } from "./users";
-import { timestamps } from "@/utils/columns.helper";
+import { timestamps } from "@/utils/columnsHelper";
 import { createInsertSchema } from "drizzle-zod";
 
 export const stories = pgTable('stories', {

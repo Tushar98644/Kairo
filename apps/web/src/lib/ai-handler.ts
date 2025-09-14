@@ -7,8 +7,7 @@ export async function insertMagicAi(
   const { block } = editor.getTextCursorPosition();
   
   const selection = editor.getSelection();
-  const prompt = selection
-    ? editor.getSelectedText() : block?.content?.map((inline) => inline.text).join("");
+  const prompt = editor.getSelectedText();
 
   if (!prompt) {
     return;

@@ -3,6 +3,7 @@ import { verifyWebhook, WebhookEvent } from '@clerk/express/webhooks'
 import { db } from '../../db/client'
 import { users } from '../../db/schema/users';
 import { eq } from 'drizzle-orm';
+import { sendEmail } from '@/utils/sendEmail';
 
 class UserController {
   clerkWebhookHandler = async (req: Request, res: Response) => {
@@ -26,6 +27,8 @@ class UserController {
             email: evt.data?.email_addresses[0]?.email_address ?? '',
             name: `${evt.data.first_name || ''} ${evt.data.last_name || ''}`.trim(),
           });
+          
+          await sendEmail(evt.data.email_addresses[0]?.email_address!, evt.data.first_name!)
           break;
 
         case 'user.updated':

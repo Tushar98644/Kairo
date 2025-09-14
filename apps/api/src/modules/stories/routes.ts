@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { storyController } from './controller';
-import { augmentUser } from '../../middleware/augment.user';
+import { augmentUser } from '../../middleware/augmentUser';
 
 const router = Router();
 
