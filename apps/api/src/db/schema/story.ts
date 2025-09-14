@@ -1,7 +1,7 @@
 import { pgTable, uuid, text } from "drizzle-orm/pg-core";
-import { users } from "./users";
+import { users } from "./user";
 import { timestamps } from "@/utils/columnsHelper";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
 export const stories = pgTable('stories', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -12,5 +12,6 @@ export const stories = pgTable('stories', {
 });
 
 export const insertStorySchema = createInsertSchema(stories);
+export const updateStorySchema = createUpdateSchema(stories);
 export type Story = typeof stories.$inferSelect;
 export type StoryInsert = typeof stories.$inferInsert;

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { verifyWebhook, WebhookEvent } from '@clerk/express/webhooks'
 import { db } from '../../db/client'
-import { users } from '../../db/schema/users';
+import { users } from '../../db/schema/user';
 import { eq } from 'drizzle-orm';
-import { sendEmail } from '@/utils/sendEmail';
+import { sendEmail } from '../../utils/sendEmail';
 
-class UserController {
+export class UserController {
   clerkWebhookHandler = async (req: Request, res: Response) => {
     let evt: WebhookEvent;
   
@@ -52,5 +52,3 @@ class UserController {
     }
   };
 }
-
-export const userController = new UserController();

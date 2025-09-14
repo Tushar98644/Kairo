@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { eq } from 'drizzle-orm';
 import { getAuth } from '@clerk/express';
 import { db } from '../db/client';
-import { users } from '../db/schema/users';
+import { users } from '../db/schema/user';
 
 declare global {
   namespace Express {
