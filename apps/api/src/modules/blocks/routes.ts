@@ -8,9 +8,10 @@ const blockController = new BlockController(blockService);
 const router = Router();
 
 router.route('/')
-  .get(blockController.getAllBlocks)
-  .post(blockController.createBlock)
-  .put('/:id', blockController.updateBlock)
-  .delete('/:id', blockController.deleteBlock)
+  .get(blockController.getBlocks)
+  .put(blockController.syncBlocks)
+  
+router.route('/:id')
+  .delete(blockController.deleteBlock)
 
 export const blockRoutes = router;

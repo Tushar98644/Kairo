@@ -12,7 +12,7 @@ const storyController = new StoryController(storyService);
 router.use(augmentUser);
 
 router.route('/')
-  .get(storyController.getAllStories)
+  .get(storyController.getStories)
   .post(storyController.createStory)
   
 router.route('/:id')

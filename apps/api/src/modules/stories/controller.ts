@@ -5,7 +5,7 @@ import { insertStorySchema, updateStorySchema } from "../../db/schema/story";
 export class StoryController {
   constructor(private storyService: StoryService) {}
  
-  public getAllStories = async (req: Request, res: Response) => {
+  public getStories = async (req: Request, res: Response) => {
     try {
       const userId = req.user!.id;
       const userStories = await this.storyService.findAll(userId);
