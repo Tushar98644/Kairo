@@ -4,18 +4,19 @@ import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, PlusCircle, LayoutDashboard, Settings, BookCopy } from "lucide-react";
+import { Menu, PlusCircle } from "lucide-react";
 import { Icons } from "@/components/global/icons";
 
 const mobileNavLinks = [
-  { href: "/dashboard", label: "My Stories", icon: LayoutDashboard },
-  { href: "/dashboard/templates", label: "Templates", icon: BookCopy },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
+  { href: "/dashboard", label: "My Stories" },
+  { href: "/dashboard/templates", label: "Templates" },
+  { href: "/dashboard/settings", label: "Settings" },
 ];
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
+    // Updated classes here for the permanent glossy effect
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border/40 bg-background/40 px-4 backdrop-blur-md sm:px-6">
       {/* Mobile Sidebar/Sheet */}
       <Sheet>
         <SheetTrigger asChild>
@@ -44,7 +45,13 @@ export function DashboardHeader() {
 
       {/* Main Header Content */}
       <div className="flex w-full items-center justify-end gap-4">
-        <UserButton />
+        <Button asChild size="sm">
+          <Link href="/editor/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            New Story
+          </Link>
+        </Button>
+        <UserButton afterSignOutUrl="/" />
       </div>
     </header>
   );

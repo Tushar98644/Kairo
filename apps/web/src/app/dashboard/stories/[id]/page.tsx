@@ -1,15 +1,25 @@
-"use client";
+import { EditorWrapper } from "@/features/editor/editor-wrapper";
+import { Block } from "@blocknote/core";
 
-import dynamic from "next/dynamic";
-
-const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
-
-const App = () => {
-  return (
-    <div>
-      <Editor />
-    </div>
-  );
+async function getStoryData(storyId: string) {
+  if (storyId === "new") {
+    return {
+      title: "Untitled Story",
+      content: null,
+    };
+  }
+  return {
+    title: "The Last Cyber-Samurai",
+    content: null
+  };
 }
 
-export default App;
+export default async function EditorPage({
+  params,
+}: {
+  params: { storyId: string };
+}) {
+  const story = await getStoryData(params.storyId);
+
+  return <EditorWrapper story={story} />;
+}
