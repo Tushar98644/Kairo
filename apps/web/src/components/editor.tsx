@@ -14,7 +14,7 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { Wand2 } from "lucide-react";
 import { useState } from "react";
-import { insertMagicAi } from "@/lib/ai-handler"; 
+import { insertMagicAi } from "@/lib/aiHandler"; 
 
 const insertMagicSlashItem = (
   editor: BlockNoteEditor,

@@ -1,30 +1,22 @@
-import type React from "react";
+import { AppProvider } from "@/providers";
+import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
-import { Inter } from "next/font/google";
-import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
-import AppProvider from "@/providers/app-provider";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Kairo",
-  description:
-    "Boost productivity, reduce costs, and scale your business with our all-in-one SaaS platform.",
-};
 
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ClerkProvider afterSignOutUrl={"/"}>
-          <AppProvider>{children}</AppProvider>
-        </ClerkProvider>
-      </body>
-    </html>
-  );
-}
+    return (
+        <html lang="en" className="scrollbar">
+            <body
+                className="min-h-screen bg-background text-foreground antialiased font-default! overflow-x-hidden"
+            >
+                <AppProvider>
+                    <Toaster richColors theme="dark" position="top-right" />
+                    {children}
+                </AppProvider>
+            </body>
+        </html>
+    );
+};
