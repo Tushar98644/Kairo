@@ -10,10 +10,7 @@ import { MagicCard } from "@/components/ui/magic-card";
 import { BentoFeatures } from "@/features/landing/bento-features";
 import { PricingCards } from "@/features/pricing/pricing-cards";
 import { PROCESS } from "@/utils/constants/misc";
-import {
-  ArrowRightIcon,
-  CreditCardIcon,
-} from "lucide-react";
+import { ArrowRightIcon, CreditCardIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -46,8 +43,8 @@ const LandingPage = () => {
               editor with advanced AI.
               <br className="hidden md:block" />
               <span className="hidden md:block">
-                Generate text, create stunning images, and bring your stories
-                to life.
+                Generate text, create stunning images, and bring your stories to
+                life.
               </span>
             </p>
             <div className="flex items-center justify-center whitespace-nowrap gap-4 z-50">
@@ -97,7 +94,7 @@ const LandingPage = () => {
           </div>
         </AnimationContainer>
         <AnimationContainer delay={0.2}>
-          <BentoFeatures/>
+          <BentoFeatures />
         </AnimationContainer>
       </MaxWidthWrapper>
 
@@ -122,9 +119,10 @@ const LandingPage = () => {
                 <div className="flex flex-col items-start justify-center w-full">
                   <process.icon
                     strokeWidth={1.5}
-                    className="w-10 h-10 text-foreground"/>
-            <div className="flex flex-col relative items-start">
-              <span className="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5">
+                    className="w-10 h-10 text-foreground"
+                  />
+                  <div className="flex flex-col relative items-start">
+                    <span className="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5">
                       {id + 1}
                     </span>
                     <h3 className="text-base mt-6 font-medium text-foreground">
@@ -136,7 +134,7 @@ const LandingPage = () => {
                   </div>
                 </div>
               </MagicCard>
-        </AnimationContainer>
+            </AnimationContainer>
           ))}
         </div>
       </MaxWidthWrapper>
@@ -157,7 +155,7 @@ const LandingPage = () => {
         </AnimationContainer>
         <AnimationContainer delay={0.2}>
           <div className="text-center text-muted-foreground p-8">
-            <PricingCards/>
+            <PricingCards />
           </div>
         </AnimationContainer>
         <AnimationContainer delay={0.3}>

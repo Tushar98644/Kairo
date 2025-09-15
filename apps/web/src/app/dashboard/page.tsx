@@ -1,55 +1,97 @@
 import Link from "next/link";
-import Image from "next/image";
-import { CreateStoryClientButton } from "@/components/create-story-client-button";
-import { Book, Plus } from "lucide-react";
+import { PlusCircle } from "lucide-react";
+import { format } from "date-fns";
+import { MaxWidthWrapper } from "@/components/global/max-width-wrapper";
+import { Button } from "@/components/ui/button";
+import { MagicCard } from "@/components/ui/magic-card";
 
-export default async function DashboardPage() {
-  const stories: any[] = [];
+const userStories = [
+  {
+    id: "story_1",
+    title: "The Last Cyber-Samurai",
+    excerpt: "In the neon-drenched streets of Neo-Kyoto, a lone warrior with a plasma katana seeks vengeance...",
+    lastUpdated: new Date("2025-09-15T18:30:00Z"),
+  },
+  {
+    id: "story_2",
+    title: "Whispers of the Void",
+    excerpt: "An ancient cosmic entity awakens, its thoughts echoing across galaxies, promising knowledge at a terrible price.",
+    lastUpdated: new Date("2025-09-12T11:00:00Z"),
+  },
+];
+
+const PageHeader = () => (
+  <div className="flex items-center justify-between">
+    <div className="grid gap-1">
+      <h1 className="text-2xl font-medium tracking-tight md:text-3xl">
+        Your Stories
+      </h1>
+      <p className="text-muted-foreground">
+        Create and manage your creative projects.
+      </p>
+    </div>
+    <Button asChild>
+      <Link href="/editor/new">
+        <PlusCircle className="mr-2 h-4 w-4" />
+        New Story
+      </Link>
+    </Button>
+  </div>
+);
+
+const StoryCard = ({ story }: { story: (typeof userStories)[0] }) => (
+  <Link href={`/editor/${story.id}`}>
+    <MagicCard className="h-full">
+      <div className="flex h-full flex-col justify-between">
+        <div>
+          <h3 className="text-lg font-medium text-foreground truncate">
+            {story.title}
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+            {story.excerpt}
+          </p>
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">
+          Last updated: {format(story.lastUpdated, "MMM d, yyyy")}
+        </p>
+      </div>
+    </MagicCard>
+  </Link>
+);
+
+const EmptyState = () => (
+    <div className="mt-16 flex flex-col items-center gap-4 rounded-lg border-2 border-dashed border-border p-8 text-center">
+    <h3 className="text-xl font-medium">You haven&apos;t created any stories yet.</h3>
+    <p className="text-muted-foreground">
+      Let&apos;s get that first spark of an idea down.
+    </p>
+    <Button asChild className="mt-2">
+      <Link href="/editor/new">
+        <PlusCircle className="mr-2 h-4 w-4" />
+        Create your first story
+      </Link>
+    </Button>
+  </div>
+);
+
+
+const DashboardPage = () => {
+  const stories = userStories;
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold text-ink/90 dark:text-dark-ink/90 mb-2">
-        Welcome, writer.
-      </h1>
-      <p className="text-lg text-ink/60 dark:text-dark-ink/60 mb-12">
-        Your stories are waiting. Pick up where you left off.
-      </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {stories &&
-          stories.map((story) => (
-            <Link
-              href={`/story/${story.id}`}
-              key={story.id}
-              className="group block p-6 border-l-2 border-accent/50 hover:bg-accent/5 transition-all"
-            >
-              <h2 className="text-2xl font-bold text-ink dark:text-dark-ink group-hover:text-accent transition-colors">
-                {story.title}
-              </h2>
-              <p className="mt-2 text-ink/70 dark:text-dark-ink/70 line-clamp-3">
-                {story.description || "No description yet..."}
-              </p>
-              <div className="mt-4 text-xs text-ink/50 dark:text-dark-ink/50">
-                Last updated: {new Date(story.updatedAt).toLocaleDateString()}
-              </div>
-            </Link>
+    <MaxWidthWrapper className="py-8">
+      <PageHeader />
+      {stories.length > 0 ? (
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {stories.map((story) => (
+            <StoryCard key={story.id} story={story} />
           ))}
-        {/* Create new story 'card' */}
-        <div className="p-6 border-l-2 border-dashed border-ink/20 flex flex-col justify-center">
-          <h2 className="text-2xl font-bold text-ink/40">A new idea?</h2>
-          <p className="mt-2 text-ink/50">Begin a new journey.</p>
-          <CreateStoryClientButton
-            variant="link"
-            className="!p-0 !justify-start mt-4 text-accent"
-          />
         </div>
-      </div>
-    </div>
+      ) : (
+        <EmptyState />
+      )}
+    </MaxWidthWrapper>
   );
-}
+};
 
-
-
-
-
-
+export default DashboardPage;
