@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/global/icons";
-import { SignInForm } from "@/features/auth/signin-form";
+import { SignUpForm } from "@/features/auth/signup-form";
 import { Spinner } from "@/components/ui/spinner";
 
-const SignInPage = () => {
+const SignUpPage = () => {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center p-4">
       <div className="flex w-full max-w-sm flex-col items-center">
@@ -17,27 +17,36 @@ const SignInPage = () => {
         </div>
 
         <Suspense fallback={<Spinner className="h-8 w-8 text-primary" />}>
-          <SignInForm />
+          <SignUpForm />
         </Suspense>
 
         {/* Footer */}
         <div className="mt-auto flex w-full flex-col items-center gap-6 pt-8">
           <p className="px-8 text-center text-sm text-muted-foreground">
-            By signing in, you agree to our{" "}
-            <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+            By signing up, you agree to our{" "}
+            <Link
+              href="/terms"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+            <Link
+              href="/privacy"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Privacy Policy
             </Link>
             .
           </p>
           <div className="flex w-full items-center justify-center border-t border-border/80 py-6">
             <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link href="/auth/sign-up" className="font-medium text-primary hover:underline underline-offset-4">
-                Sign up
+              Already have an account?{" "}
+              <Link
+                href="/auth/sign-in"
+                className="font-medium text-primary hover:underline underline-offset-4"
+              >
+                Sign in
               </Link>
             </p>
           </div>
@@ -47,4 +56,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default SignUpPage;

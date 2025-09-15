@@ -52,7 +52,7 @@ const LandingPage = () => {
             </p>
             <div className="flex items-center justify-center whitespace-nowrap gap-4 z-50">
               <Button asChild>
-                <Link href={"/auth/sign-in"} className="flex items-center">
+                <Link href="/auth/sign-up" className="flex items-center">
                   Start creating for free
                   <ArrowRightIcon className="w-4 h-4 ml-2" />
                 </Link>
@@ -186,7 +186,7 @@ const LandingPage = () => {
               </p>
               <div className="mt-6">
                 <Button asChild>
-                  <Link href={"/auth/sign-in"}>
+                  <Link href="/auth/sign-in">
                     Get started for free
                     <ArrowRightIcon className="w-4 h-4 ml-2" />
                   </Link>

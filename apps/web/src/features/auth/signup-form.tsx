@@ -1,27 +1,28 @@
 "use client";
 
 import * as Clerk from "@clerk/elements/common";
-import * as SignIn from "@clerk/elements/sign-in";
+import * as SignUp from "@clerk/elements/sign-up";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Icons } from "@/components/global/icons";
+import { Icons } from "@/components/global/icons"; 
 
-export function SignInForm() {
+export function SignUpForm() {
   return (
-    <SignIn.Root>
+    <SignUp.Root>
       <Clerk.Loading>
         {(isGlobalLoading) => (
-          <SignIn.Step name="start">
-            <div className="flex w-full flex-col items-center gap-y-8">
+          <SignUp.Step name="start">
+            <div className="flex w-full flex-col items-center gap-y-6">
               <div className="text-center">
                 <h2 className="text-2xl font-medium tracking-tight">
-                  Sign in to Kairo
+                  Create your Kairo account
                 </h2>
                 <p className="mt-1 text-muted-foreground">
-                  Welcome back! Please sign in to continue.
+                  Start your creative journey with us.
                 </p>
               </div>
 
+              {/* Social Logins */}
               <div className="flex w-full flex-col gap-2">
                 <Clerk.Connection name="google" asChild>
                   <Button variant="outline" disabled={isGlobalLoading}>
@@ -58,9 +59,9 @@ export function SignInForm() {
                 </Clerk.Connection>
               </div>
             </div>
-          </SignIn.Step>
+          </SignUp.Step>
         )}
       </Clerk.Loading>
-    </SignIn.Root>
+    </SignUp.Root>
   );
 }
