@@ -11,7 +11,6 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { NAV_LINKS } from "@/utils";
-import { useClerk } from "@clerk/nextjs";
 import { LucideIcon, ZapIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from 'react';
@@ -22,9 +21,6 @@ import { AnimationContainer } from "../global/animation-container";
 import { Icons } from "@/components/global/icons";
 
 const Navbar = () => {
-
-    const { user } = useClerk();
-
     const [scroll, setScroll] = useState(false);
 
     const handleScroll = () => {
@@ -111,8 +107,18 @@ const Navbar = () => {
                             </NavigationMenuList>
                         </NavigationMenu>
                     </div>
+                    
+                    <div className="hidden lg:flex items-center">
+                            <div className="flex items-center gap-x-4">
+                                <Link href="/auth/sign-in" className={buttonVariants({ size: "sm", variant: "ghost" })}>
+                                    Sign In
+                                </Link>
+                                <Link href="/auth/sign-up" className={buttonVariants({ size: "sm", })}>
+                                    Get Started
+                                    <ZapIcon className="size-3.5 ml-1.5 text-orange-500 fill-orange-500" />
+                                </Link>
+                            </div>                    </div>
                     <MobileNavbar />
-
                 </MaxWidthWrapper>
             </AnimationContainer>
         </header>
