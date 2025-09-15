@@ -97,7 +97,6 @@ const LandingPage = () => {
           </div>
         </AnimationContainer>
         <AnimationContainer delay={0.2}>
-          {/* Bento Grid */}
           <BentoFeatures/>
         </AnimationContainer>
       </MaxWidthWrapper>
@@ -123,10 +122,9 @@ const LandingPage = () => {
                 <div className="flex flex-col items-start justify-center w-full">
                   <process.icon
                     strokeWidth={1.5}
-                    className="w-10 h-10 text-foreground"
-                  />
-                  <div className="flex flex-col relative items-start">
-                    <span className="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5">
+                    className="w-10 h-10 text-foreground"/>
+            <div className="flex flex-col relative items-start">
+              <span className="absolute -top-6 right-0 border-2 border-border text-foreground font-medium text-2xl rounded-full w-12 h-12 flex items-center justify-center pt-0.5">
                       {id + 1}
                     </span>
                     <h3 className="text-base mt-6 font-medium text-foreground">
@@ -138,7 +136,7 @@ const LandingPage = () => {
                   </div>
                 </div>
               </MagicCard>
-            </AnimationContainer>
+        </AnimationContainer>
           ))}
         </div>
       </MaxWidthWrapper>
