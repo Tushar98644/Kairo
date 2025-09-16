@@ -8,9 +8,9 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className="scrollbar">
+        <html lang="en" className="scrollbar" suppressHydrationWarning>
             <body
-                className="min-h-screen bg-background text-foreground antialiased font-default! overflow-x-hidden"
+                className="min-h-screen bg-background text-foreground antialiased font-default! overflow-x-hidden" suppressHydrationWarning
             >
                 <AppProvider>
                     <Toaster richColors theme="dark" position="top-right" />

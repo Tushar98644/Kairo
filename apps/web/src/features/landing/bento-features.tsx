@@ -72,7 +72,7 @@ const features = [
     className: "col-span-3 md:col-span-1",
     background: (
       <Image
-        src="/hero-dashboard.png"
+        src="/landing.png"
         width={200}
         height={200}
         alt="AI Generated Images"
@@ -89,7 +89,7 @@ const features = [
     className: "col-span-3 md:col-span-1",
     background: (
       <Image
-        src="/hero-dashboard.png"
+        src="/landing.png"
         width={200}
         height={200}
         alt="AI Generated Images"

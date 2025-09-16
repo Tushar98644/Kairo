@@ -24,6 +24,8 @@ export const augmentUser = async (req: Request, res: Response, next: NextFunctio
 
   try {
     const clerkId = auth.userId;
+    
+    console.log(`Clerk ID: ${clerkId} which is type of: ${typeof clerkId}`);
 
     const user = await db.query.users.findFirst({
         where: eq(users.clerkId, clerkId),
@@ -31,8 +33,9 @@ export const augmentUser = async (req: Request, res: Response, next: NextFunctio
             id: true
         }
     });
-
+    
     if (!user) {
+        console.log(`search result : ${user}`);
         return res.status(404).json({ message: 'User not found in our system.' });
     }
 

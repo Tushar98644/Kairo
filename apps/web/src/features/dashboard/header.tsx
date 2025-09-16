@@ -45,13 +45,7 @@ export function DashboardHeader() {
 
       {/* Main Header Content */}
       <div className="flex w-full items-center justify-end gap-4">
-        <Button asChild size="sm">
-          <Link href="/editor/new">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            New Story
-          </Link>
-        </Button>
-        <UserButton afterSignOutUrl="/" />
+        <UserButton />
       </div>
     </header>
   );

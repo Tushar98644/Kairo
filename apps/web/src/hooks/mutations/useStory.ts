@@ -2,14 +2,9 @@ import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@clerk/nextjs";
 
-interface createProduct {
+interface createStory {
   title: string;
   description: string;
-  price: number;
-  category: string;
-  imageKey: string;
-  latitude: number;
-  longitude: number;
 };
 
 const api = axios.create({
@@ -17,25 +12,24 @@ const api = axios.create({
     headers: { "Content-Type": "application/json"},
 });
 
-export const useCreateProduct = () => {
+export const useCreateStory = () => {
   const queryClient = useQueryClient();
-  
   const { getToken } = useAuth();
 
   return useMutation({
-    mutationFn: async (product: createProduct) => {
+    mutationFn: async (story: createStory) => {
       const token = await getToken();
-      const response = await api.post("/products", product , {
+      const response = await api.post("/stories", story , {
         headers: { "Authorization": `Bearer ${token}` }
       });
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: ["products"],
         exact: true,
       });
-      console.log("Product created successfully");
+      console.log("Story created successfully");
     },
   });
 };

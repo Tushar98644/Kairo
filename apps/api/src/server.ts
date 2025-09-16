@@ -27,7 +27,6 @@ app.use(cors(corsOptions));
 
 app.use('/api/', userRoutes);
 app.use('/api/v1/stories', requireAuth(), storyRoutes);
-app.use('/api/v1/stories', requireAuth(), blockRoutes);
 
 const port = process.env.PORT || 3000;
 

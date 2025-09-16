@@ -65,7 +65,7 @@ const LandingPage = () => {
             <div className="-m-2 rounded-xl p-2 ring-1 ring-inset ring-foreground/20 lg:-m-4 lg:rounded-2xl bg-opacity-50 backdrop-blur-3xl">
               <BorderBeam size={250} duration={12} delay={9} />
               <Image
-                src="/hero-dashboard.png"
+                src="/landing.png"
                 alt="Kairo Editor Screenshot"
                 width={1200}
                 height={1200}
