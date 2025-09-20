@@ -42,12 +42,7 @@ const MagicToolbarButton = (props: {
   </button>
 );
 
-
-export function BlocknoteEditor({
-    initialContent,
-}: {
-    initialContent: Block[] | null;
-}) {
+export function BlocknoteEditor() {
   const [aiSuggestion, setAiSuggestion] = useState<{
     block: Block;
     originalContent: any;
@@ -69,7 +64,7 @@ export function BlocknoteEditor({
   }
 
   const editor = useCreateBlockNote({
-    initialContent: initialContent ? initialContent : undefined,
+    initialContent: undefined,
     uploadFile,
   });
 

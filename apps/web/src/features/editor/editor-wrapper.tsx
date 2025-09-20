@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFetchStoryById } from "@/hooks/queries/useStoryQuery";
 import { useParams } from "next/navigation";
 import { useUpdateStory } from "@/hooks/mutations/useStory";
+import { toast } from "sonner";
 
 export function EditorWrapper() {
   const { id } = useParams<{ id: string }>();
@@ -55,10 +56,11 @@ export function EditorWrapper() {
       onSuccess: (updatedStory) => {
         initialData.current = updatedStory;
         setIsDirty(false);
+        toast.success("Story title updated successfully!");
       },
       onError: (error) => {
         console.error("Failed to update story:", error);
-        alert("Failed to save changes. Please try again.");
+        toast.error("Failed to update title. Please try again later.");
       }
     });
   };
@@ -84,9 +86,7 @@ export function EditorWrapper() {
         </div>
       </header>
       <div className="flex-1 w-full overflow-y-auto">
-        <BlocknoteEditor
-          initialContent={storyData.content}
-        />
+        <BlocknoteEditor />
       </div>
     </div>
   );

@@ -58,7 +58,6 @@ export const metadata: Metadata = {
     },
 };
 
-
 export default function RootLayout({
     children,
 }: {
@@ -70,9 +69,9 @@ export default function RootLayout({
                 className="min-h-screen bg-background text-foreground antialiased font-default! overflow-x-hidden" suppressHydrationWarning
             >
                 <AppProvider>
-                    <Toaster richColors theme="dark" position="top-right" />
                     {children}
                 </AppProvider>
+                <Toaster richColors theme="dark" position="top-center" />
             </body>
         </html>
     );
