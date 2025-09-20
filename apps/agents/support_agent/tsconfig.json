@@ -23,6 +23,14 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
-  }
+    "noPropertyAccessFromIndexSignature": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["support_agent/src/*"],
+      "@config/*": ["support_agent/config/*"]
+    }
+  },
+  "include": ["support_agent/src/**/*"],
+  "exclude": ["node_modules"]
 }

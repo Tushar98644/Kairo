@@ -9,6 +9,7 @@ import { ZapIcon } from "lucide-react";
 import { Story } from "@/types/Story";
 import { useCreateStory } from "@/hooks/mutations/useStory";
 import { useRouter } from "next/navigation";
+import { useFetchStories } from "@/hooks/queries/useStoryQuery";
 
 const PageHeader = () => {
   const { mutateAsync: createStory } = useCreateStory();
@@ -48,7 +49,7 @@ const PageHeader = () => {
 };
 
 const StoryCard = ({ story }: { story: any }) => (
-  <Link href={`/editor/${story.id}`}>
+  <Link href={`/dashboard/stories/${story.id}`}>
     <MagicCard className="h-full">
       <div className="flex h-full flex-col justify-between">
         <div>
@@ -56,11 +57,11 @@ const StoryCard = ({ story }: { story: any }) => (
             {story.title}
           </h3>
           <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-            {story.excerpt}
+            {story.description}
           </p>
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
-          Last updated: {format(story.lastUpdated, "MMM d, yyyy")}
+          Last updated: {format(story.updatedAt, "MMM d, yyyy")}
         </p>
       </div>
     </MagicCard>
@@ -83,7 +84,13 @@ const EmptyState = () => (
 );
 
 const DashboardPage = () => {
-  const stories: Story[] = [];
+  const { data: stories = [], isPending} = useFetchStories();
+
+  if (isPending) {
+    return (
+      <p>loading stories...</p>
+    )
+  }
 
   return (
     <MaxWidthWrapper className="py-8">
