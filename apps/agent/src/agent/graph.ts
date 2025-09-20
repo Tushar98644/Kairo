@@ -1,50 +1,13 @@
-import { StateGraph, END, START } from "@langchain/langgraph";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { ToolNode } from "@langchain/langgraph/prebuilt";
+import { StateGraph, START } from "@langchain/langgraph";
 import { GraphAnnotation } from "./state";
-import { webSearchTool } from "./tools";
-import type { AIMessage } from "@langchain/core/messages";
-
-const tools = [webSearchTool];
-
-const llm = new ChatGoogleGenerativeAI({
-  model: "gemini-2.5-pro",
-  apiKey: process.env.GEMINI_API_KEY,
-  temperature: 0,
-  maxRetries: 2,
-  streaming: true,
-});
-
-const callModel = async (state: typeof GraphAnnotation.State) => {
-  const { messages } = state;
-  
-  const llmWithTools = llm.bindTools(tools);
-  const response = await llmWithTools.invoke(messages);
-  return { messages: response };
-};
-
-const toolNode = new ToolNode(tools);
-
-const shouldContinue = (state: typeof GraphAnnotation.State) => {
-  const messages = state.messages;
-  const lastMessage = messages[messages.length - 1];
-  
-  const castAIMessage = lastMessage as AIMessage;
-  
-  if (castAIMessage?.tool_calls?.length) {
-    return "call_tools";
-  }
-  return END;
-};
+import { callModelNode, toolNode } from "./nodes";
+import { shouldContinue } from "./edges";
 
 const workflow = new StateGraph(GraphAnnotation)
-  .addNode("agent", callModel)
+  .addNode("agent", callModelNode)
   .addNode("call_tools", toolNode)
   .addEdge(START, "agent")
-  .addConditionalEdges("agent", shouldContinue, {
-    "tools": "call_tools",
-    "__end__": "__end__"
-  })
+  .addConditionalEdges("agent", shouldContinue)
   .addEdge("call_tools", "agent");
 
 export const app = workflow.compile();
