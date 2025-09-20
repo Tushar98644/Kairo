@@ -26,10 +26,32 @@ export const useCreateStory = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ["products"],
+        queryKey: ["story", data.id],
         exact: true,
       });
       console.log("Story created successfully");
+    },
+  });
+};
+
+export const useUpdateStory = () => {
+  const queryClient = useQueryClient();
+  const { getToken } = useAuth();
+
+  return useMutation({
+    mutationFn: async ({ storyId, title }: { storyId: string; title: string }) => {
+      const token = await getToken();
+      const response = await api.patch(`/stories/${storyId}`, { title }, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["story", data.id],
+        exact: true,
+      });
+      console.log("Story updated successfully");
     },
   });
 };

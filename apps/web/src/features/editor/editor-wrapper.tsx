@@ -1,57 +1,91 @@
 "use client";
 
-import { useState } from "react";
-import { Block } from "@blocknote/core";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BlocknoteEditor } from "./blocknote-editor";
 import { Badge } from "@/components/ui/badge";
+import { useFetchStoryById } from "@/hooks/queries/useStoryQuery";
+import { useParams } from "next/navigation";
+import { useUpdateStory } from "@/hooks/mutations/useStory";
 
-interface EditorWrapperProps {
-  story: {
-    title: string;
-    content: Block[] | null;
-  };
-}
+export function EditorWrapper() {
+  const { id } = useParams<{ id: string }>();
+  const { data: storyData, isPending, isError } = useFetchStoryById(id);
+  const { mutateAsync: updateStory, isPending: isSaving } = useUpdateStory();
 
-export function EditorWrapper({ story }: EditorWrapperProps) {
-  const [title, setTitle] = useState(story.title);
-  const [saveStatus, setSaveStatus] = useState("Saved");
+  type StoryData = { title?: string; description: string, content?: any };
+  const initialData = useRef<StoryData | null>(null);
 
-  const handleContentChange = () => {
-    setSaveStatus("Unsaved changes");
-  };
+  const [title, setTitle] = useState("");
+  const [isDirty, setIsDirty] = useState(false);
 
-  const handleSave = () => {
-    setSaveStatus("Saving...");
-    setTimeout(() => {
-      setSaveStatus("Saved");
-    }, 1500);
+  useEffect(() => {
+    console.log("storyData", storyData);
+    if (storyData) {
+      initialData.current = storyData;
+      setTitle(storyData.title || "Tushar's Story");
+      setIsDirty(false);
+    }
+  }, [storyData]);
+
+  useEffect(() => {
+    if (!initialData.current) return;
+    const hasTitleChanged = initialData.current.title !== title;
+
+    if (hasTitleChanged) setIsDirty(true);
+  }, [title]);
+
+  if (isPending) {
+    return (
+      <p>loading stories...</p>
+    )
+  }
+
+  if (isError) {
+    return (
+      <p>Failed to load the story. Please try again later.</p>
+    )
+  }
+
+  const handleSave = async () => {
+    if (initialData.current?.title === title) return;
+
+    await updateStory({ storyId: id, title }, {
+      onSuccess: (updatedStory) => {
+        initialData.current = updatedStory;
+        setIsDirty(false);
+      },
+      onError: (error) => {
+        console.error("Failed to update story:", error);
+        alert("Failed to save changes. Please try again.");
+      }
+    });
   };
 
   return (
     <div className="flex h-[calc(100vh-theme(height.14))] flex-col">
       <header className="flex items-center justify-between gap-4 border-b bg-background p-4">
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="h-9 max-w-sm border-0 text-lg font-medium focus-visible:ring-0"
-          placeholder="Untitled Story"
-        />
+        <div className="text-sm text-muted-foreground flex flex-col">
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="h-9 max-w-sm border-0 text-lg font-medium focus-visible:ring-0"
+          />
+        </div>
         <div className="flex items-center gap-2">
-          <Badge variant={saveStatus === "Saved" ? "secondary" : "outline"}>
-            {saveStatus}
+          <Badge variant={isSaving ? "secondary" : "outline"}>
+            {isSaving ? "Saving..." : isDirty ? "Unsaved Changes" : "Saved"}
           </Badge>
-          <Button onClick={handleSave} size="sm" disabled={saveStatus !== "Unsaved changes"}>
+          <Button onClick={handleSave} size="sm" disabled={isSaving || !isDirty}>
             Save
           </Button>
         </div>
       </header>
-
       <div className="flex-1 w-full overflow-y-auto">
         <BlocknoteEditor
-          initialContent={story.content}
-          onChange={handleContentChange}
+          initialContent={storyData.content}
         />
       </div>
     </div>

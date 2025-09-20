@@ -14,7 +14,7 @@ export class StoryService {
   };
   
   public findById = async (storyId: string) => {
-    const story = await db.select().from(stories).where(eq(stories.id, storyId));
+    const [story] = await db.select().from(stories).where(eq(stories.id, storyId));
     return story;
   }
   
@@ -24,7 +24,7 @@ export class StoryService {
   }
   
   public delete = async (storyId: string) => {
-    const deletedStory = await db.delete(stories).where(eq(stories.id, storyId)).returning();
+    const [deletedStory] = await db.delete(stories).where(eq(stories.id, storyId)).returning();
     return deletedStory;
   }
 }

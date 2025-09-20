@@ -45,10 +45,8 @@ const MagicToolbarButton = (props: {
 
 export function BlocknoteEditor({
     initialContent,
-    onChange
 }: {
     initialContent: Block[] | null;
-    onChange: () => void;
 }) {
   const [aiSuggestion, setAiSuggestion] = useState<{
     block: Block;
@@ -80,7 +78,7 @@ export function BlocknoteEditor({
       <BlockNoteView
         editor={editor}
         theme={resolvedTheme === "dark" ? darkDefaultTheme : lightDefaultTheme}
-        onChange={onChange}
+        // onChange={onChange}
         className="min-h-[500px]"
       >
         <FormattingToolbarWithAI editor={editor} setAiSuggestion={setAiSuggestion}/>

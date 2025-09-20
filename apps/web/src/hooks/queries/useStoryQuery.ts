@@ -22,3 +22,18 @@ export const useFetchStories = () => {
     staleTime: 3 * 60 * 1000,
   });
 }
+
+export const useFetchStoryById = (storyId: string) => {
+  const { getToken } = useAuth();
+  return useQuery({
+    queryKey: ["story", storyId],
+    queryFn: async () => {
+      const token = await getToken();
+      const response = await api.get(`/stories/${storyId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      return response.data;
+    },
+    enabled: !!storyId,
+  });
+}
