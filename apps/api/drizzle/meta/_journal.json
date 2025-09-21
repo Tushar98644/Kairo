@@ -8,6 +8,13 @@
       "when": 1757446076435,
       "tag": "0000_initial tables",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758444592966,
+      "tag": "0001_story_blocks",
+      "breakpoints": true
     }
   ]
 }

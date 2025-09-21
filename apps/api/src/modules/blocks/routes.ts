@@ -5,7 +5,7 @@ import { BlockService } from './service';
 const blockService = new BlockService();
 const blockController = new BlockController(blockService);
 
-const router = Router();
+const router = Router({ mergeParams: true });
 
 router.route('/')
   .get(blockController.getBlocks)

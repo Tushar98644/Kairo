@@ -20,6 +20,6 @@ router.route('/:id')
   .patch(storyController.updateStory)
   .delete(storyController.deleteStory)
 
-router.use('/:storyId/blocks', blockRoutes);
+router.use('/:id/blocks', blockRoutes);
 
 export const storyRoutes = router;

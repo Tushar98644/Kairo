@@ -1,4 +1,4 @@
-import { pgTable, uuid, integer, jsonb, pgEnum, vector } from "drizzle-orm/pg-core";
+import { pgTable, uuid, integer, jsonb, vector } from "drizzle-orm/pg-core";
 import { stories } from "./story";
 import { createInsertSchema } from "drizzle-zod";
 
