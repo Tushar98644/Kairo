@@ -10,6 +10,8 @@ export const storyBlocks = pgTable('story_blocks', {
   embedding: vector('embedding', { dimensions: 1536 }), 
 });
 
-export const insertBlockSchema = createInsertSchema(storyBlocks);
+export const insertBlockSchema = createInsertSchema(storyBlocks, {
+  embedding: (schema) => schema.nullable().optional(),
+});
 export type StoryBlock = typeof storyBlocks.$inferSelect;
 export type StoryBlockInsert = typeof storyBlocks.$inferInsert;

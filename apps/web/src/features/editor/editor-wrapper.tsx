@@ -77,10 +77,10 @@ export function EditorWrapper() {
           />
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant={isSaving ? "secondary" : "outline"}>
+          <Badge variant={isSaving ? "secondary" : "outline"} className="p-2">
             {isSaving ? "Saving..." : isDirty ? "Unsaved Changes" : "Saved"}
           </Badge>
-          <Button onClick={handleSave} size="sm" disabled={isSaving || !isDirty}>
+          <Button onClick={handleSave} disabled={isSaving || !isDirty} className="px-8 py-0 size-7">
             Save
           </Button>
         </div>

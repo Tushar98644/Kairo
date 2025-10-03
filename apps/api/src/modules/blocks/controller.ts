@@ -26,13 +26,15 @@ export class BlockController {
       if (!storyId) {
         return res.status(400).json({ message: "No Story ID provided" });
       }
+
+      const { blocks } = req.body;
+
+      // const validation = insertBlockSchema.safeParse(req.body);
+      // if (!validation.success) {
+      //   return res.status(400).json({ message: "Invalid input", errors: validation.error.issues });
+      // }
       
-      const validation = insertBlockSchema.safeParse(req.body);
-      if (!validation.success) {
-        return res.status(400).json({ message: "Invalid input", errors: validation.error.issues });
-      }
-      
-      const syncedBlocks = await this.blockService.sync(storyId,validation.data);
+      const syncedBlocks = await this.blockService.sync(storyId, blocks);
 
       if (!syncedBlocks) {
         return res.status(404).json({ message: "Story not found or you do not have permission to edit it." });
