@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "next-themes";
 import { Block, BlockNoteEditor, PartialBlock } from "@blocknote/core";
-import { useCreateBlockNote, useEditorChange } from "@blocknote/react";
 import { BlockNoteView, darkDefaultTheme, lightDefaultTheme } from "@blocknote/mantine";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";

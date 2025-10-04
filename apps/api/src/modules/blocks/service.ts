@@ -2,6 +2,9 @@ import { db } from "../../db/client";
 import { storyBlocks, StoryBlock } from "../../db/schema/block";
 import { eq, asc } from "drizzle-orm";
 import { type StoryBlockInsert } from "../../db/schema/block";
+import { OpenAIEmbeddings } from "@langchain/openai";
+
+const embeddings = new OpenAIEmbeddings({model: "text-embedding-3-large"});
 
 export class BlockService {
   public async findByStoryId(storyId: string): Promise<StoryBlock[]> {
@@ -17,13 +20,16 @@ export class BlockService {
       if (blocks.length === 0) {
         return []; 
       }
+      
+      const contentToEmbed = blocks.map((block:any) => JSON.stringify(block.content));
+      const blockEmbeddings = await embeddings.embedDocuments(contentToEmbed);
 
       const blocksToInsert: StoryBlockInsert[] = blocks.map((block: any, index: number) => {
         return {
           storyId: storyId,
           content: block.content,
           position: index,    
-          embedding: null,
+          embedding: blockEmbeddings[index],
         };
       });
 

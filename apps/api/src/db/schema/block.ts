@@ -13,5 +13,6 @@ export const storyBlocks = pgTable('story_blocks', {
 export const insertBlockSchema = createInsertSchema(storyBlocks, {
   embedding: (schema) => schema.nullable().optional(),
 });
+
 export type StoryBlock = typeof storyBlocks.$inferSelect;
 export type StoryBlockInsert = typeof storyBlocks.$inferInsert;
