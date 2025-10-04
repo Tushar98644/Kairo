@@ -28,7 +28,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["support_agent/src/*"],
-      "@config/*": ["support_agent/config/*"]
+      "@config/*": ["support_agent/config/*"],
+      "@/api/*": ["../../api/src/*"]
     }
   },
   "include": ["support_agent/src/**/*"],
