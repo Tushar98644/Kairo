@@ -2,9 +2,9 @@ import { db } from "../../db/client";
 import { storyBlocks, StoryBlock } from "../../db/schema/block";
 import { eq, asc } from "drizzle-orm";
 import { type StoryBlockInsert } from "../../db/schema/block";
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
-const embeddings = new OpenAIEmbeddings({model: "text-embedding-3-large"});
+const embeddings = new GoogleGenerativeAIEmbeddings({model: "gemini-embedding-001"});
 
 export class BlockService {
   public async findByStoryId(storyId: string): Promise<StoryBlock[]> {
