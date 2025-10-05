@@ -4,7 +4,10 @@ import { eq, asc } from "drizzle-orm";
 import { type StoryBlockInsert } from "../../db/schema/block";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
-const embeddings = new GoogleGenerativeAIEmbeddings({model: "gemini-embedding-001"});
+const embeddings = new GoogleGenerativeAIEmbeddings({
+  apiKey: process.env.GOOGLE_GENAI_API_KEY || "",
+  model: "gemini-embedding-001",
+});
 
 export class BlockService {
   public async findByStoryId(storyId: string): Promise<StoryBlock[]> {
@@ -27,6 +30,7 @@ export class BlockService {
       const blocksToInsert: StoryBlockInsert[] = blocks.map((block: any, index: number) => {
         return {
           storyId: storyId,
+          type: block.type,
           content: block.content,
           position: index,    
           embedding: blockEmbeddings[index],

@@ -15,6 +15,20 @@
       "when": 1758444592966,
       "tag": "0001_story_blocks",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759664703843,
+      "tag": "0002_update_embedding_size",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759666755555,
+      "tag": "0003_add_type_field",
+      "breakpoints": true
     }
   ]
 }

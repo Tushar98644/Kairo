@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { Block, BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { BlockNoteView, darkDefaultTheme, lightDefaultTheme } from "@blocknote/mantine";
@@ -16,6 +16,8 @@ export const BlocknoteEditor = () => {
   const { id } = useParams<{ id: string }>();
   const { data: blocks = [], isPending } = useFetchBlocks(id);
   const { mutate: updateBlock } = useSyncBlocks();
+
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
   const [initialContent, setInitialContent] = useState<
     PartialBlock[] | undefined | "loading"
@@ -41,62 +43,76 @@ export const BlocknoteEditor = () => {
     );
   }
 
-    useEffect(() => {
+  useEffect(() => {
     if (!isPending && blocks) {
-      setInitialContent(blocks.length > 0 ? blocks : undefined);
+      try {
+        setInitialContent(blocks.length > 0 ? blocks : undefined);
+      } catch (e) {
+        setInitialContent(undefined);
+      }
+    } else if (!isPending) {
+      setInitialContent(undefined);
     }
   }, [blocks, isPending]);
+
 
   const editor = useMemo(() => {
     if (initialContent === "loading") {
       return undefined;
     }
-    return BlockNoteEditor.create({ 
+    return BlockNoteEditor.create({
       initialContent,
-      uploadFile 
+      uploadFile
     });
   }, [initialContent]);
 
   if (isPending) {
     return <div>Loading...</div>;
   }
+
   if (editor === undefined) {
     return <div>Loading content...</div>;
   }
 
-return (
-  <div className="relative mx-auto max-w-4xl p-4 sm:p-8">
-    <BlockNoteView
-      editor={editor}
-      theme={resolvedTheme === "dark" ? darkDefaultTheme : lightDefaultTheme}
-      className="min-h-[500px]"
-      onChange={() => {
-        const timer = setTimeout(() => {
-          const savedBlocks = editor.document;
-          updateBlock({ storyId: id, blocks: savedBlocks }, {
-            onSuccess: () => {
-              toast.success("Story saved successfully!");
-            },
-            onError: () => {
-              toast.error("Failed to save story. Please try again later.");
-            }
-          });
-        }, 2000);
-        return () => clearTimeout(timer);
-      }}
-    >
-      <FormattingToolbarWithAI editor={editor} setAiSuggestion={setAiSuggestion} />
-      <SuggestionMenuWithAI editor={editor} />
-      {aiSuggestion && (
-        <AIReviewMenu
-          editor={editor}
-          suggestion={aiSuggestion}
-          setAiSuggestion={setAiSuggestion}
-        />
-      )}
-    </BlockNoteView>
-  </div>
-);
+  return (
+    <div className="relative mx-auto max-w-4xl p-4 sm:p-8">
+      <BlockNoteView
+        editor={editor}
+        theme={resolvedTheme === "dark" ? darkDefaultTheme : lightDefaultTheme}
+        className="min-h-[500px]"
+        onChange={() => {
+          if (debounceTimer.current) {
+            clearTimeout(debounceTimer.current);
+          }
+
+          debounceTimer.current = setTimeout(() => {
+            const savedBlocks = editor.document;
+            updateBlock(
+              { storyId: id, blocks: savedBlocks as any },
+              {
+                onSuccess: () => {
+                  toast.success("Story saved successfully!");
+                },
+                onError: () => {
+                  toast.error("Failed to save story. Please try again later.");
+                },
+              }
+            );
+          }, 2000);
+        }}
+      >
+        <FormattingToolbarWithAI editor={editor} setAiSuggestion={setAiSuggestion} />
+        <SuggestionMenuWithAI editor={editor} />
+        {aiSuggestion && (
+          <AIReviewMenu
+            editor={editor}
+            suggestion={aiSuggestion}
+            setAiSuggestion={setAiSuggestion}
+          />
+        )}
+      </BlockNoteView>
+    </div>
+  );
 
 
 }

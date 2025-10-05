@@ -7,7 +7,6 @@ import morgan from "morgan";
 import { requireAuth } from "@clerk/express";
 import { userRoutes } from "./modules/users/routes";
 import { storyRoutes } from "./modules/stories/routes";
-import { blockRoutes } from "./modules/blocks/routes";
 
 const app = express();
 

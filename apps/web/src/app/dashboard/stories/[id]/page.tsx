@@ -1,5 +1,4 @@
 import { EditorWrapper } from "@/features/editor/editor-wrapper";
-import { Block } from "@blocknote/core";
 
 async function getStoryData(storyId: string) {
   if (storyId === "new") {

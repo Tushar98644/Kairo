@@ -1,0 +1,1 @@
+ALTER TABLE "story_blocks" ADD COLUMN "type" text NOT NULL;
