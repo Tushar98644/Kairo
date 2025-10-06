@@ -2,6 +2,7 @@
   "name": "server",
   "main": "index.ts",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "bun x tsc",

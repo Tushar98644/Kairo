@@ -3,7 +3,6 @@ import { BlockNoteEditor, filterSuggestionItems } from "@blocknote/core";
 import { SuggestionMenuController, getDefaultReactSlashMenuItems } from "@blocknote/react";
 import { Wand2 } from "lucide-react";
 
-
 const insertMagicSlashItem = (
   editor: BlockNoteEditor,
   setAiSuggestion: any

@@ -4,13 +4,10 @@ import { tool } from "@langchain/core/tools";
 import { sql } from "drizzle-orm";
 import { db } from "../../../../api/src/db/client";
 import { z } from "zod";
+import { embeddings } from "../config/llm";
 
-export const webSearchTool = new TavilySearch({
+const webSearchTool = new TavilySearch({
   maxResults: 1,
-});
-
-const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: "gemini-embedding-001",
 });
 
 const retrieveStoryContextTool = tool(

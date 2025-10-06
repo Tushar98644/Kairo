@@ -5,7 +5,7 @@ import { type StoryBlockInsert } from "../../db/schema/block";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
 const embeddings = new GoogleGenerativeAIEmbeddings({
-  apiKey: process.env.GOOGLE_GENAI_API_KEY || "",
+  apiKey: process.env.GEMINI_API_KEY || "",
   model: "gemini-embedding-001",
 });
 

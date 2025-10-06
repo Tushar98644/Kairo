@@ -10,7 +10,7 @@ import { useParams } from "next/navigation";
 import { useUpdateStory } from "@/hooks/mutations/useStory";
 import { toast } from "sonner";
 
-export function EditorWrapper() {
+export const EditorWrapper = () => {
   const { id } = useParams<{ id: string }>();
   const { data: storyData, isPending, isError } = useFetchStoryById(id);
   const { mutateAsync: updateStory, isPending: isSaving } = useUpdateStory();

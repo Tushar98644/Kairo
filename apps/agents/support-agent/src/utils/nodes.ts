@@ -1,5 +1,5 @@
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { llm } from "../../config/llm";
+import { llm } from "../config/llm";
 import { tools } from "./tools";
 import { type GraphState } from "./state";
 

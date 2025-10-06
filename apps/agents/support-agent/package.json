@@ -1,8 +1,8 @@
 {
   "name": "langgraph-agent",
   "module": "src/index.ts",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts"
   },
@@ -12,9 +12,10 @@
     "@langchain/langgraph": "^0.4.9",
     "@langchain/langgraph-cli": "^0.0.66",
     "@langchain/tavily": "^0.1.5",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-    "duck-duck-scrape": "^2.2.7",
-    "tsx": "^4.20.5"
+    "tsx": "^4.20.5",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@types/bun": "latest"

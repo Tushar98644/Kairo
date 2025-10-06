@@ -1,4 +1,4 @@
-import { timestamps } from '@/utils/columnsHelper';
+import { timestamps } from '../../utils/columnsHelper';
 import { pgTable, text, integer, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {

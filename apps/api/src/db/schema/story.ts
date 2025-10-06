@@ -1,6 +1,6 @@
 import { pgTable, uuid, text } from "drizzle-orm/pg-core";
 import { users } from "./user";
-import { timestamps } from "@/utils/columnsHelper";
+import { timestamps } from "../../utils/columnsHelper";
 import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 

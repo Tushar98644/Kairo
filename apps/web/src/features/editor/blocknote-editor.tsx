@@ -55,7 +55,6 @@ export const BlocknoteEditor = () => {
     }
   }, [blocks, isPending]);
 
-
   const editor = useMemo(() => {
     if (initialContent === "loading") {
       return undefined;
@@ -113,6 +112,4 @@ export const BlocknoteEditor = () => {
       </BlockNoteView>
     </div>
   );
-
-
 }

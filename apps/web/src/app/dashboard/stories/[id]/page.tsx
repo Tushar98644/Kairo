@@ -1,24 +1,7 @@
 import { EditorWrapper } from "@/features/editor/editor-wrapper";
 
-async function getStoryData(storyId: string) {
-  if (storyId === "new") {
-    return {
-      title: "Untitled Story",
-      content: null,
-    };
-  }
-  return {
-    title: "The Last Cyber-Samurai",
-    content: null
-  };
+const EditorPage = () => {
+  return <EditorWrapper />;
 }
 
-export default async function EditorPage({
-  params,
-}: {
-  params: { storyId: string };
-}) {
-  const story = await getStoryData(params.storyId);
-
-  return <EditorWrapper story={story} />;
-}
+export default EditorPage;
