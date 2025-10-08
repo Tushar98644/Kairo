@@ -12,57 +12,57 @@ const ChatComponent = () => {
     const [finalResponse, setFinalResponse] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!query) return;
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!query) return;
 
-    setIsLoading(true);
-    setFinalResponse("");
+        setIsLoading(true);
+        setFinalResponse("");
 
-    try {
-      const response = await fetch("http://localhost:5000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
+        try {
+            const response = await fetch("http://localhost:5000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query }),
+            });
 
-      if (!response.body) {
-        throw new Error("The response body is empty.");
-      }
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break; 
-
-        const chunkText = decoder.decode(value);
-        const eventLines = chunkText.split("\n\n").filter(Boolean);
-
-        for (const line of eventLines) {
-          if (line.startsWith("data:")) {
-            const jsonString = line.substring(5);
-            try {
-              const { token } = JSON.parse(jsonString);
-              if (token) {
-                setFinalResponse((prev) => prev + token);
-              }
-            } catch (error) {
-              console.error("Failed to parse chunk:", jsonString, error);
+            if (!response.body) {
+                throw new Error("The response body is empty.");
             }
-          }
-        }
-      }
 
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error fetching stream:", error);
-      setFinalResponse("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunkText = decoder.decode(value);
+                const eventLines = chunkText.split("\n\n").filter(Boolean);
+
+                for (const line of eventLines) {
+                    if (line.startsWith("data:")) {
+                        const jsonString = line.substring(5);
+                        try {
+                            const { token } = JSON.parse(jsonString);
+                            if (token) {
+                                setFinalResponse((prev) => prev + token);
+                            }
+                        } catch (error) {
+                            console.error("Failed to parse chunk:", jsonString, error);
+                        }
+                    }
+                }
+            }
+
+            setIsLoading(false);
+        } catch (error) {
+            console.error("Error fetching stream:", error);
+            setFinalResponse("An error occurred. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     return (

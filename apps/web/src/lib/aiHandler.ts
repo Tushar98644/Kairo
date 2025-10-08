@@ -1,53 +1,49 @@
-import { Block, BlockNoteEditor } from "@blocknote/core";
-
-export async function insertMagicAi(
-  editor: BlockNoteEditor,
-  setAiSuggestion: (
-    suggestion: { block: Block; originalContent: any } | null
-  ) => void
+export async function streamAiResponse(
+  prompt: string,
+  onChunk: (chunk: string) => void,
+  onFinish: () => void,
+  onError: (error: Error) => void
 ) {
-  const { block } = editor.getTextCursorPosition();
-
-  const selection = editor.getSelection();
-  const prompt = editor.getSelectedText();
-
-  if (!prompt) {
-    return;
-  }
-
-  const originalContent = block.content;
-
-  editor.updateBlock(block, {
-    content: "🧠 Thinking...",
-  });
-
-  const { Client } = await import("@langchain/langgraph-sdk");
-
-  const client = new Client({ apiUrl: "http://localhost:2024" });
-
-  const streamResponse = client.runs.stream(null, "agent", {
-    input: {
-      messages: [{ role: "user", content: "What is LangGraph?" }],
-    },
-    streamMode: "messages-tuple",
-  });
-
-  for await (const chunk of streamResponse) {
-    console.log(`Receiving new event of type: ${chunk.event}...`);
-    console.log(JSON.stringify(chunk.data));
-    console.log("\n\n");
-  }
-
   try {
-    const aiResponse = await axios.post("/");
-
-    editor.updateBlock(block, {
-      content: aiResponse,
-      props: { backgroundColor: "blue" },
+    const response = await fetch("http://localhost:5000/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: prompt }),
     });
 
-    setAiSuggestion({ block, originalContent });
+    if (!response.body) {
+      throw new Error("The response body is empty.");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        onFinish();
+        break;
+      }
+
+      const chunkText = decoder.decode(value);
+      const eventLines = chunkText.split("\n\n").filter(Boolean);
+
+      for (const line of eventLines) {
+        if (line.startsWith("data:")) {
+          const jsonString = line.substring(5);
+          try {
+            const { token } = JSON.parse(jsonString);
+            if (token) {
+              onChunk(token);
+            }
+          } catch (error) {
+            console.error("Failed to parse chunk:", jsonString, error);
+          }
+        }
+      }
+    }
   } catch (error) {
-    editor.updateBlock(block, { content: originalContent });
+    console.error("Error in AI handler:", error);
+    onError(error as Error);
   }
 }

@@ -1,22 +1,22 @@
-import { insertMagicAi } from "@/lib/aiHandler";
 import { BlockNoteEditor, filterSuggestionItems } from "@blocknote/core";
-import { SuggestionMenuController, getDefaultReactSlashMenuItems } from "@blocknote/react";
+import {
+  SuggestionMenuController,
+  getDefaultReactSlashMenuItems,
+} from "@blocknote/react";
 import { Wand2 } from "lucide-react";
 
-const insertMagicSlashItem = (
-  editor: BlockNoteEditor,
-  setAiSuggestion: any
-) => ({
-    title: 'Ask AI',
-    onItemClick: () => insertMagicAi(editor, setAiSuggestion),
-    aliases: ['ai', 'magic'],
-    group: 'AI',
-    icon: <Wand2 size={18} />,
-    subtext: 'Generate text with AI',
+const askAISlashItem = (setIsAiPromptOpen: (isOpen: boolean) => void) => ({
+  title: "Ask AI",
+  onItemClick: () => setIsAiPromptOpen(true),
+  aliases: ["ai", "magic"],
+  group: "AI",
+  icon: <Wand2 size={18} />,
+  subtext: "Generate text with AI",
 });
 
 export const SuggestionMenuWithAI = (props: {
-  editor: BlockNoteEditor<any, any, any>;
+  editor: BlockNoteEditor;
+  setIsAiPromptOpen: (isOpen: boolean) => void;
 }) => {
   return (
     <SuggestionMenuController
@@ -25,11 +25,11 @@ export const SuggestionMenuWithAI = (props: {
         filterSuggestionItems(
           [
             ...getDefaultReactSlashMenuItems(props.editor),
-            insertMagicSlashItem(props.editor, query),
+            askAISlashItem(props.setIsAiPromptOpen),
           ],
-          query,
+          query
         )
       }
     />
   );
-}
+};

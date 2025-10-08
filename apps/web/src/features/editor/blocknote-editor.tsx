@@ -3,14 +3,23 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { Block, BlockNoteEditor, PartialBlock } from "@blocknote/core";
-import { BlockNoteView, darkDefaultTheme, lightDefaultTheme } from "@blocknote/mantine";
+import {
+  BlockNoteView,
+  darkDefaultTheme,
+  lightDefaultTheme,
+} from "@blocknote/mantine";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
-import { AIReviewMenu, FormattingToolbarWithAI, SuggestionMenuWithAI } from "./components";
+import {
+  AIPromptMenu,
+  FormattingToolbarWithAI,
+  SuggestionMenuWithAI,
+} from "./components";
 import { useFetchBlocks } from "@/hooks/queries/usBlockQuery";
 import { useSyncBlocks } from "@/hooks/mutations/useBlockMutation";
-import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
+import { uploadToS3 } from "@/lib/uploadToS3";
 
 export const BlocknoteEditor = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,26 +32,10 @@ export const BlocknoteEditor = () => {
     PartialBlock[] | undefined | "loading"
   >("loading");
 
-  const [aiSuggestion, setAiSuggestion] = useState<{
-    block: Block;
-    originalContent: any;
-  } | null>(null);
+  const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
 
   const { resolvedTheme } = useTheme();
-
-  async function uploadFile(file: File) {
-    const body = new FormData();
-    body.append("file", file);
-    const ret = await fetch("https://tmpfiles.org/api/v1/upload", {
-      method: "POST",
-      body: body,
-    });
-    return (await ret.json()).data.url.replace(
-      "tmpfiles.org/",
-      "tmpfiles.org/dl/"
-    );
-  }
-
+  
   useEffect(() => {
     if (!isPending && blocks) {
       try {
@@ -61,7 +54,7 @@ export const BlocknoteEditor = () => {
     }
     return BlockNoteEditor.create({
       initialContent,
-      uploadFile
+      uploadFile: uploadToS3,
     });
   }, [initialContent]);
 
@@ -89,9 +82,6 @@ export const BlocknoteEditor = () => {
             updateBlock(
               { storyId: id, blocks: savedBlocks as any },
               {
-                onSuccess: () => {
-                  toast.success("Story saved successfully!");
-                },
                 onError: () => {
                   toast.error("Failed to save story. Please try again later.");
                 },
@@ -100,16 +90,22 @@ export const BlocknoteEditor = () => {
           }, 2000);
         }}
       >
-        <FormattingToolbarWithAI editor={editor} setAiSuggestion={setAiSuggestion} />
-        <SuggestionMenuWithAI editor={editor} />
-        {aiSuggestion && (
-          <AIReviewMenu
+        <FormattingToolbarWithAI
+          editor={editor}
+          setIsAiPromptOpen={setIsAiPromptOpen}
+        />
+        <SuggestionMenuWithAI
+          editor={editor}
+          setIsAiPromptOpen={setIsAiPromptOpen}
+        />
+
+        {isAiPromptOpen && (
+          <AIPromptMenu
             editor={editor}
-            suggestion={aiSuggestion}
-            setAiSuggestion={setAiSuggestion}
+            setIsAiPromptOpen={setIsAiPromptOpen}
           />
         )}
       </BlockNoteView>
     </div>
   );
-}
+};
