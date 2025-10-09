@@ -10,32 +10,36 @@ import { toast } from "sonner";
 interface AIPromptMenuProps {
   editor: BlockNoteEditor;
   setIsAiPromptOpen: (isOpen: boolean) => void;
+  initialTextToModify: string;
+  initialBlocksToModify: Block[] | null; 
 }
 
 export const AIPromptMenu = ({
   editor,
   setIsAiPromptOpen,
+  initialTextToModify,
+  initialBlocksToModify, 
 }: AIPromptMenuProps) => {
   const [prompt, setPrompt] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [originalBlocks, setOriginalBlocks] = useState<Block[] | null>(null);
 
   const handleAiRequest = async () => {
     if (!prompt) return;
 
-    const selectedBlocks = editor.getSelection()?.blocks;
-    if (!selectedBlocks || selectedBlocks.length === 0) {
-      toast.error("Please select the block(s) you want to modify.");
+    const selectedText = initialTextToModify;
+
+    if (!selectedText) {
+      toast.error("No text was selected to modify.");
       return;
     }
 
-    setOriginalBlocks(selectedBlocks);
     setIsLoading(true);
     setAiResponse("");
 
     streamAiResponse(
       prompt,
+      selectedText,
       (chunk) => {
         setAiResponse((prev) => prev + chunk);
       },
@@ -44,30 +48,26 @@ export const AIPromptMenu = ({
       },
       (error) => {
         toast.error("AI request failed. Please try again.");
+        console.error(error);
         setIsLoading(false);
       }
     );
   };
 
   const handleAccept = () => {
-    if (originalBlocks) {
+    if (initialBlocksToModify) {
       const newBlock: Block = {
-        id: originalBlocks[0].id,
+        id: initialBlocksToModify[0].id,
         type: "paragraph",
         props: {
-          backgroundColor: "default",
-          textColor: "default",
           textAlignment: "left",
+          textColor: "default",
+          backgroundColor: "default",
         },
         content: [{ type: "text", text: aiResponse, styles: {} }],
         children: [],
       };
-      editor.replaceBlocks([originalBlocks[0].id], [newBlock]);
-
-      if (originalBlocks.length > 1) {
-        const blockIdsToRemove = originalBlocks.slice(1).map((b) => b.id);
-        editor.removeBlocks(blockIdsToRemove);
-      }
+      editor.replaceBlocks(initialBlocksToModify.map((b) => b.id), [newBlock]);
     }
     setIsAiPromptOpen(false);
   };

@@ -1,17 +1,15 @@
-import { Router } from 'express';
-import { BlockController } from './controller';
-import { BlockService } from './service';
+import { Router } from "express";
+import { BlockController } from "./controller";
 
-const blockService = new BlockService();
-const blockController = new BlockController(blockService);
+export const createBlocksRouter = (blockController: BlockController) => {
+  const router = Router({ mergeParams: true });
 
-const router = Router({ mergeParams: true });
+  router
+    .route("/")
+    .get(blockController.getBlocks)
+    .put(blockController.syncBlocks);
 
-router.route('/')
-  .get(blockController.getBlocks)
-  .put(blockController.syncBlocks)
-  
-router.route('/:id')
-  .delete(blockController.deleteBlock)
+  router.route("/:id").delete(blockController.deleteBlock);
 
-export const blockRoutes = router;
+  return router;
+};

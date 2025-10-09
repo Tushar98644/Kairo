@@ -1,6 +1,5 @@
 import { UserProfile } from '@clerk/nextjs';
-import { FC } from 'react'
-;
+import { FC } from 'react';
 
 const ProfilePage: FC = () => {
   return (

@@ -1,20 +1,36 @@
 export async function streamAiResponse(
   prompt: string,
+  selectedText: string,
   onChunk: (chunk: string) => void,
   onFinish: () => void,
   onError: (error: Error) => void
 ) {
+  const finalPrompt = `
+    Based on the following instruction, modify the provided text. 
+    Only return the modified text, without any explanation.
+
+    Instruction: "${prompt}"
+
+    Text to Modify:
+    ---
+    ${selectedText}
+    ---
+  `;
+
   try {
+    // 2. Send the combined string as the 'query' value.
+    // Your backend doesn't need to change because it still receives { query: "..." }.
     const response = await fetch("http://localhost:5000/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: prompt }),
+      body: JSON.stringify({ query: finalPrompt }),
     });
 
     if (!response.body) {
       throw new Error("The response body is empty.");
     }
 
+    // The rest of your streaming logic remains exactly the same.
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 

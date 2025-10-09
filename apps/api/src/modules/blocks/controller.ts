@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { BlockService } from "./service";
-import { insertBlockSchema } from "@/db/schema/block";
 
 export class BlockController {
   constructor(private blockService: BlockService) {}

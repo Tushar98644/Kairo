@@ -2,32 +2,56 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import helmet from "helmet";
-import ratelimit from "express-rate-limit";
 import morgan from "morgan";
 import { requireAuth } from "@clerk/express";
-import { userRoutes } from "./modules/users/routes";
-import { storyRoutes } from "./modules/stories/routes";
 
-const app = express();
+import { createRedisClient } from "./config/redis/client.js";
 
-app.use(express.json());
-app.use(helmet());
-// app.use(ratelimit({ windowMs: 15 * 60 * 1000, max: 100 }));
-app.use(morgan("dev"));
+import { userRoutes } from "./modules/users/routes.js";
+import { createStoryRouter } from "./modules/stories/routes.js";
+import { StoryController } from "./modules/stories/controller.js";
+import { StoryService } from "./modules/stories/service.js";
+import { BlockService } from "./modules/blocks/service.js";
+import { BlockController } from "./modules/blocks/controller.js";
+import { createBlocksRouter } from "./modules/blocks/routes.js";
 
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT","PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+async function main() {
+  const redisClient = await createRedisClient();
 
-app.use(cors(corsOptions));
+  const app = express();
 
-app.use('/api/', userRoutes);
-app.use('/api/v1/stories', requireAuth(), storyRoutes);
+  app.use(express.json());
+  app.use(helmet());
+  app.use(morgan("dev"));
 
-const port = process.env.PORT || 3000;
+  const corsOptions = {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  };
 
-app.listen(port, () => {
-  console.log(`server is running on port: ${port}`);
+  app.use(cors(corsOptions));
+  
+  const blockService = new BlockService(redisClient);
+  const blockController = new BlockController(blockService);
+
+  const blockRoutes = createBlocksRouter(blockController);
+
+  const storyService = new StoryService(redisClient);
+  const storyController = new StoryController(storyService);
+
+  const storyRoutes = createStoryRouter(storyController, blockRoutes);
+  
+  app.use('/api/v1/users', userRoutes);
+  app.use('/api/v1/stories', requireAuth(), storyRoutes);
+
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`🚀 Server is running on port: ${port}`);
+  });
+}
+
+main().catch(err => {
+  console.error("Fatal error during server startup:", err);
+  process.exit(1);
 });

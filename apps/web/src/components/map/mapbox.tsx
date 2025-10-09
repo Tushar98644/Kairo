@@ -28,7 +28,7 @@ export default function MapboxMap({ points }: MapProps) {
       {...viewState}
       style={{ width:"100%", height:"100%" }}
       mapStyle="mapbox://styles/mapbox/standard"
-      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+      mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
       onMove={evt => setViewState(evt.viewState)}
     >
       {points.map(point => (

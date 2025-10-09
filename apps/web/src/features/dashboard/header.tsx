@@ -4,7 +4,7 @@ import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, PlusCircle } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Icons } from "@/components/global/icons";
 
 const mobileNavLinks = [

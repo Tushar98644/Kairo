@@ -1,23 +1,30 @@
 services:
-  nginx:
-    image: nginx:alpine
-    container_name: nginx_proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /home/ubuntu/Kairo/nginx/default.conf:/etc/nginx/conf.d/:ro
-      - cert:/etc/letsencrypt
-      - webroot:/var/www/certbot:ro
+  api_server:
+    build:
+      context: ../apps/api
+      dockerfile: Dockerfile
+    container_name: api_server
     restart: always
 
-  certbot:
-    image: certbot/certbot
-    container_name: certbot_client
-    volumes:
-      - cert:/etc/letsencrypt
-      - webroot:/var/www/certbot
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: nginx_proxy
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /home/ubuntu/Kairo/nginx/default.conf:/etc/nginx/conf.d/:ro
+  #     - cert:/etc/letsencrypt
+  #     - webroot:/var/www/certbot:ro
+  #   restart: always
 
-volumes:
-  cert:
-  webroot:
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: certbot_client
+  #   volumes:
+  #     - cert:/etc/letsencrypt
+  #     - webroot:/var/www/certbot
+
+# volumes:
+#   cert:
+#   webroot:

@@ -33,13 +33,15 @@ export const BlocknoteEditor = () => {
   >("loading");
 
   const [isAiPromptOpen, setIsAiPromptOpen] = useState(false);
+  const [aiContextText, setAiContextText] = useState("");
+  const [aiContextBlocks, setAiContextBlocks] = useState<Block[] | null>(null);
 
   const { resolvedTheme } = useTheme();
-  
+
   useEffect(() => {
     if (!isPending && blocks) {
       try {
-        setInitialContent(blocks.length > 0 ? blocks : undefined);
+        setInitialContent(blocks.length > 0 ? (blocks as PartialBlock[]) : undefined);
       } catch (e) {
         setInitialContent(undefined);
       }
@@ -58,12 +60,22 @@ export const BlocknoteEditor = () => {
     });
   }, [initialContent]);
 
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
+  const handleOpenAiMenu = () => {
+    if (!editor) return;
+    
+    const selection = editor.getSelection();
+    if (!selection) {
+      toast.error("Please select text to modify.");
+      return;
+    }
+
+    setAiContextText(editor.getSelectedText());
+    setAiContextBlocks(selection.blocks);
+    setIsAiPromptOpen(true);
+  };
 
   if (editor === undefined) {
-    return <div>Loading content...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -76,7 +88,6 @@ export const BlocknoteEditor = () => {
           if (debounceTimer.current) {
             clearTimeout(debounceTimer.current);
           }
-
           debounceTimer.current = setTimeout(() => {
             const savedBlocks = editor.document;
             updateBlock(
@@ -92,17 +103,16 @@ export const BlocknoteEditor = () => {
       >
         <FormattingToolbarWithAI
           editor={editor}
-          setIsAiPromptOpen={setIsAiPromptOpen}
+          onOpenAiMenu={handleOpenAiMenu}
         />
-        <SuggestionMenuWithAI
-          editor={editor}
-          setIsAiPromptOpen={setIsAiPromptOpen}
-        />
+        <SuggestionMenuWithAI editor={editor} setIsAiPromptOpen={setIsAiPromptOpen}/>
 
         {isAiPromptOpen && (
           <AIPromptMenu
             editor={editor}
             setIsAiPromptOpen={setIsAiPromptOpen}
+            initialTextToModify={aiContextText}
+            initialBlocksToModify={aiContextBlocks}
           />
         )}
       </BlockNoteView>

@@ -45,9 +45,15 @@ app.post("/chat", async (req, res) => {
       res.write(`data: ${JSON.stringify({ token: token.content })}\n\n`);
     }
   } catch (error) {
-    return res
-      .status(500)
-      .json({ error: "An internal server error occurred." });
+
+    if (!res.headersSent) {
+      return res.status(500).json({ error: "An internal server error occurred." });
+    } 
+    else {
+      res.end();
+    }
+
+    return res.status(500).json({ error: "An internal server error occurred." });
   }
 });
 
