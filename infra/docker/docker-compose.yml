@@ -1,9 +1,43 @@
 services:
-  api_server:
+  api-service:
     build:
-      context: ../apps/api
+      context: ../../apps/api
       dockerfile: Dockerfile
-    container_name: api_server
+    container_name: api_service
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - kairo-network
+    restart: always
+
+  agent-service:
+    build:
+      context: ../../apps/agents/support-agent
+      dockerfile: Dockerfile
+    container_name: agent_service
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - kairo-network
+    restart: always
+
+  redis:
+    image: "redis:alpine"
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - kairo-network
     restart: always
 
   # nginx:
@@ -25,6 +59,11 @@ services:
   #     - cert:/etc/letsencrypt
   #     - webroot:/var/www/certbot
 
-# volumes:
-#   cert:
-#   webroot:
+volumes:
+  redis-data:
+  # cert:
+  # webroot:
+
+networks:
+  kairo-network:
+    driver: bridge

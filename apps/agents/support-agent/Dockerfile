@@ -9,7 +9,7 @@ COPY . .
 
 RUN bun run build
 
-FROM oven/bun:1.0-slim AS runner
+FROM oven/bun:1.0-slim AS production
 WORKDIR /app
 
 COPY --from=build /app/dist ./dist
@@ -18,6 +18,6 @@ COPY --from=build /app/bun.lockb ./
 
 RUN bun install --production --frozen-lockfile
 
-EXPOSE 8080
+EXPOSE 5000
 
-CMD ["bun", "dist/server.js"]
+CMD ["bun", "dist/index.js"]
